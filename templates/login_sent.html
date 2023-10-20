@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="../static/form.css" />
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <h2 class="title">Login sent</h2>
+    <h3>A login link has been sent to:</h3>
+    <p>{{ email }}</p>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="flash">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+    <a href="/" style="margin: 0;" class="logout-button">Go back to login</a>
+</div>
+{% endblock %}

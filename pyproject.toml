@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "template1"
+version = "0.1.0"
+description = ""
+authors = ["Tom Zandbergen <541897@student.saxion.nl>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^3.0.0"
+sqlalchemy = "^2.0.21"
+postgresqlite = "^0.4.3"
+flask-wtf = "^1.2.1"
+flask-mail = "^0.9.1"
+flask-login = "^0.6.2"
+flask-sqlalchemy = "^3.1.1"
+requests = "^2.31.0"
+wheel = "^0.41.2"
+gunicorn = "^21.2.0"
+ngrok = "^0.11.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

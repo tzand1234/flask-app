@@ -1,0 +1,66 @@
+The files belonging to this database system will be owned by user "tomz".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "en_US.UTF-8".
+The default database encoding has accordingly been set to "UTF8".
+The default text search configuration will be set to "english".
+
+Data page checksums are disabled.
+
+creating directory /home/tomz/Almec/Flask_start/template1/data/postgresqlite/pgdata ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default max_connections ... 100
+selecting default shared_buffers ... 128MB
+selecting default time zone ... Europe/Amsterdam
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+initdb: warning: enabling "trust" authentication for local connections
+You can change this by editing pg_hba.conf or using the option -A, or
+--auth-local and --auth-host, the next time you run initdb.
+
+Success. You can now start the database server using:
+
+    /home/tomz/.cache/postgresqlite/14.3/bin/pg_ctl -D /home/tomz/Almec/Flask_start/template1/data/postgresqlite/pgdata -l logfile start
+
+PostgreSQL daemon is starting..
+2023-10-12 14:41:12.045 CEST [45680] LOG:  starting PostgreSQL 14.3 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.1.0, 64-bit
+2023-10-12 14:41:12.046 CEST [45680] LOG:  listening on IPv6 address "::1", port 42833
+2023-10-12 14:41:12.046 CEST [45680] LOG:  listening on IPv4 address "127.0.0.1", port 42833
+2023-10-12 14:41:12.051 CEST [45680] LOG:  listening on Unix socket "/tmp/postgresqlite-mwowkkJZ/.s.PGSQL.42833"
+2023-10-12 14:41:12.063 CEST [45682] LOG:  database system was shut down at 2023-10-12 14:41:10 CEST
+2023-10-12 14:41:12.072 CEST [45680] LOG:  database system is ready to accept connections
+PostgreSQLite now has 1 client(s)
+PostgreSQLite now has 2 client(s)
+PostgreSQLite removed /home/tomz/Almec/Flask_start/template1/data/postgresqlite/locks/xUZKTEDDtXqk as it was no longer locked
+PostgreSQLite now has 1 client(s)
+PostgreSQLite now has 2 client(s)
+PostgreSQLite removed /home/tomz/Almec/Flask_start/template1/data/postgresqlite/locks/BJBgPPcesyJr as it was no longer locked
+PostgreSQLite now has 1 client(s)
+PostgreSQLite now has 2 client(s)
+PostgreSQLite removed /home/tomz/Almec/Flask_start/template1/data/postgresqlite/locks/drCstleInXXP as it was no longer locked
+PostgreSQLite now has 1 client(s)
+PostgreSQLite now has 2 client(s)
+PostgreSQLite removed /home/tomz/Almec/Flask_start/template1/data/postgresqlite/locks/LjDdhSAYBfUT as it was no longer locked
+PostgreSQLite now has 1 client(s)
+PostgreSQLite now has 2 client(s)
+2023-10-12 15:12:36.743 CEST [49265] ERROR:  duplicate key value violates unique constraint "pick_list_idpicklist_key"
+2023-10-12 15:12:36.743 CEST [49265] DETAIL:  Key (idpicklist)=(96400129) already exists.
+2023-10-12 15:12:36.743 CEST [49265] STATEMENT:  INSERT INTO pick_list (idpicklist, picklist, sender, recipient, "user") VALUES ($1::INTEGER, $2::JSON, $3::JSON, $4::JSON, $5::JSON) RETURNING pick_list.id
+PostgreSQL daemon is starting..
+2023-10-13 12:14:52.903 CEST [13081] LOG:  starting PostgreSQL 14.3 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.1.0, 64-bit
+2023-10-13 12:14:52.904 CEST [13081] LOG:  listening on IPv6 address "::1", port 42833
+2023-10-13 12:14:52.904 CEST [13081] LOG:  listening on IPv4 address "127.0.0.1", port 42833
+2023-10-13 12:14:52.909 CEST [13081] LOG:  listening on Unix socket "/tmp/postgresqlite-mwowkkJZ/.s.PGSQL.42833"
+2023-10-13 12:14:52.925 CEST [13094] LOG:  database system was interrupted; last known up at 2023-10-12 15:16:14 CEST
+2023-10-13 12:14:52.986 CEST [13094] LOG:  database system was not properly shut down; automatic recovery in progress
+2023-10-13 12:14:52.992 CEST [13094] LOG:  redo starts at 0/178A950
+2023-10-13 12:14:52.992 CEST [13094] LOG:  invalid record length at 0/178AA38: wanted 24, got 0
+2023-10-13 12:14:52.992 CEST [13094] LOG:  redo done at 0/178AA00 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2023-10-13 12:14:53.034 CEST [13081] LOG:  database system is ready to accept connections
+PostgreSQLite removed /home/tomz/Almec/Flask_start/template1/data/postgresqlite/locks/GgJzkXQXSilN as it was no longer locked
+PostgreSQLite removed /home/tomz/Almec/Flask_start/template1/data/postgresqlite/locks/vEebOnDKDMdA as it was no longer locked
+PostgreSQLite now has 1 client(s)
