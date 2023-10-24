@@ -2,9 +2,9 @@ from flask import *
 import postgresqlite
 import sqlalchemy as sa
 import datetime
-from flask_app import forms
+# from forms import *
 from flask_mail import *
-from flask_app import models
+# from models import *
 import requests
 import traceback 
 import json
