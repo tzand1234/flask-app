@@ -35,3 +35,5 @@ PostgreSQL daemon is starting..
 2023-10-24 11:25:45.605 CEST [18151] LOG:  database system is ready to accept connections
 PostgreSQLite now has 1 client(s)
 PostgreSQLite now has 2 client(s)
+PostgreSQLite removed /home/tomz/Almec/Flask_start/template1/data/postgresqlite/locks/EiDfyZjNzMUI as it was no longer locked
+PostgreSQLite now has 1 client(s)
