@@ -2,38 +2,20 @@ from flask import *
 import postgresqlite
 import sqlalchemy as sa
 import datetime
-# from forms import *
 from flask_mail import *
-# from models import *
 import requests
 import traceback 
 import json
 import logging
 import secrets
+import pickle
 
 app = Flask(__name__, template_folder='templates')
 
 logging.basicConfig(filename='record.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
-# aK3LYTlao4weKMFmMlmt3OtqN17u3siLKhDD1JM8l2cO9inQ api key
-
 # Configure Flask app settings
 app.config['SECRET_KEY'] = secrets.token_hex(16)
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = postgresqlite.get_uri()
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db.init_app(app)
-
-# Configure Flask-Mail
-app.config['MAIL_SERVER'] = 'smtp.ethereal.email'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'maude.cronin@ethereal.email'
-app.config['MAIL_PASSWORD'] = 'jvdfFNjXEFexHnRDFH'
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-
-mail = Mail(app)
 
 @app.errorhandler(Exception)
 def internal_server_error(e):
@@ -87,12 +69,16 @@ def add_to_session(api_data):
         response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
         app.logger.info(response)
 
+        with open('json_data.pkl', 'wb') as fp:
+        pickle.dump(data, fp)
+        print('dictionary saved successfully to file')
+
     else:
         response = f"API request failed at {datetime.datetime.now()}" 
         # Log the error to record.log
         app.logger.info(response)
 
-def add_to_database():
+# def add_to_database():
     """
     Description:
         Adds info from response to Database.    
@@ -129,7 +115,7 @@ def index():
 
             # Add data to session and database
             add_to_session(api_data)
-            add_to_database()
+            # add_to_database()
 
             if 'data' in session:
                 idorder = session['data']['picklist']['idorder']
@@ -143,11 +129,7 @@ def index():
                 # Parse JSON response and add to session and database
                 api_data = response.json()
                 add_to_session(api_data)
-                add_to_database()
-
-                barcode = "3SKRME911535608"
-                country_code = "NL"
-                zip = "7811JC"
+                # add_to_database()
 
             # Select all records from Pick_list
             query = sa.select(Pick_list)
@@ -179,7 +161,6 @@ if __name__ == '__main__':
     # Run the Flask application
     app.run(debug=True)
 # ----------------------------------------------------------------------------------------
-
 
 def login():
     """Handles the login page."""

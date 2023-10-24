@@ -1,1 +1,0 @@
-/home/tomz/.cache/postgresqlite/14.3/bin/postgres "-c" "dynamic_library_path=/home/tomz/.cache/postgresqlite/14.3/lib" "-D" "/home/tomz/Almec/Flask_start/template1/data/postgresqlite/pgdata" "-p" "58836" "--unix_socket_directories=/tmp/postgresqlite-ZCijNYGV"
