@@ -1,0 +1,26 @@
+{
+  "MergedLabels": [],
+  "ResponseShipments": [
+    {
+      "Barcode": "3SDEVC272730803", // dit moet je hebben
+      "Errors": [],
+      "Warnings": [],
+      "Labels": [
+        {
+          "Content": "JVBERi0xLjMKJeLjz9MKNSAwIG9iago8PAovQ29udGVudHMg[TRUNCATED]", // dit moet je hebben
+          "Labeltype": "Label",
+          "OutputType": "PDF"
+        }
+      ],
+      "ProductCodeDelivery": "3085"
+    }
+  ]
+}
+
+
+barcode = "3SKRME911535608"
+country_code = "NL"
+zip = "7811JC"
+
+
+https://jouw.postnl.nl/track-and-trace/{barcode}-{country_code}-{zip}
