@@ -70,8 +70,8 @@ def add_to_session(api_data):
         app.logger.info(response)
 
         with open('json_data.pkl', 'wb') as fp:
-        pickle.dump(data, fp)
-        print('dictionary saved successfully to file')
+            pickle.dump(data, fp)
+            print('dictionary saved successfully to file')
 
     else:
         response = f"API request failed at {datetime.datetime.now()}" 
