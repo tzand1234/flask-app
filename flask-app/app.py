@@ -57,26 +57,20 @@ def add_to_session(api_data):
     # Initialize the database dict
     data = {}
 
-    if response.status_code == 200:
-        for key, value in api_data.items():
-            if key == "id" or not hasattr(Pick_list, key) or key in data:
-                continue
-            data[key] = value
+    for key, value in api_data.items():
+        if key == "id" or key in data:
+            continue
+        data[key] = value
 
-        if data:
-            session['data'] = data  # Store the data in the session
-            
-        response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
-        app.logger.info(response)
+    if data:
+        session['data'] = data  # Store the data in the session
+        
+    response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
+    app.logger.info(response)
 
-        with open('json_data.pkl', 'wb') as fp:
-            pickle.dump(data, fp)
-            print('dictionary saved successfully to file')
-
-    else:
-        response = f"API request failed at {datetime.datetime.now()}" 
-        # Log the error to record.log
-        app.logger.info(response)
+    with open('json_data.pkl', 'wb') as fp:
+        pickle.dump(data, fp)
+        print('dictionary saved successfully to file')
 
 # def add_to_database():
     """
@@ -106,7 +100,7 @@ def add_to_session(api_data):
     response = f"Data fetched and stored in database successfully at {datetime.datetime.now()}"
     app.logger.info(response)
 
-@app.route("/shipping/dropshipment", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def index():
     try:
         if request.method == "POST":
@@ -131,27 +125,25 @@ def index():
                 add_to_session(api_data)
                 # add_to_database()
 
-            # Select all records from Pick_list
-            query = sa.select(Pick_list)
+                result = session['data']
 
-            # Execute the query using SQLAlchemy
-            with db.engine.begin() as dbc:
-                result = dbc.execute(query)
+            return render_template('blog/dashboard.html', api_data_list=result)
         else:
-            raise ValueError("Invalid request method")
+            return render_template('blog/dashboard.html')
+
 
     except requests.exceptions.HTTPError as err:
         # Handle HTTP errors from the API request
+        response = f"API request failed at {datetime.datetime.now()}" 
+        # Log the error to record.log
+        app.logger.info(response)
         return internal_server_error(f"API Error: {err}")
     except Exception as e:
+        response = f"API request failed at {datetime.datetime.now()}" 
+        # Log the error to record.log
+        app.logger.info(response)
         # Handle other exceptions
         return internal_server_error(e)
-
-    return render_template('blog/dashboard.html', api_data_list=result)
-
-@app.route('/')
-def test():
-    return render_template('blog/dashboard.html')
 
 
 if __name__ == '__main__':
@@ -252,3 +244,16 @@ def send_mail(link=None, subject=None, sender=None, recipients=None):
 
     response = f"Email send successfully at {datetime.datetime.now()}"
     app.logger.info(response)
+
+
+
+            # # Select all records from Pick_list
+            # query = sa.select(Pick_list)
+
+            # # Execute the query using SQLAlchemy
+            # with db.engine.begin() as dbc:
+            #     result = dbc.execute(query)
+
+        # response = f"API request failed at {datetime.datetime.now()}" 
+        # # Log the error to record.log
+        # app.logger.info(response)
