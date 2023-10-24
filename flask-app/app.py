@@ -153,9 +153,6 @@ def index():
 def test():
     return render_template('blog/dashboard.html')
 
-# Create tables based on the Model classes above.
-with app.app_context():
-    db.create_all()
 
 if __name__ == '__main__':
     # Run the Flask application
