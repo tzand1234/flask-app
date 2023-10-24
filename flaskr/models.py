@@ -1,8 +1,5 @@
-import postgresqlite 
-import flask
 import flask_sqlalchemy
-import datetime
-from flask_login import UserMixin'
+from flask_login import UserMixin
 
 db = flask_sqlalchemy.SQLAlchemy()
 

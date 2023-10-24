@@ -1,17 +1,15 @@
-from flask import Flask, render_template, flash, redirect, url_for, session, jsonify, request
-from werkzeug.security import generate_password_hash
+from flask import *
 import postgresqlite
 import sqlalchemy as sa
 import datetime
 from forms import *
-from flask_mail import Mail, Message
+from flask_mail import *
 from models import *
 import requests
-import secrets
-import base64
-import json
 import traceback 
+import json
 import logging
+import secrets
 
 app = Flask(__name__, template_folder='templates')
 
@@ -27,11 +25,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = postgresqlite.get_uri()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
-# # Configure Login manager settings
-# login_manager = LoginManager()
-# login_manager.login_view = '/'
-# login_manager.init_app(app)
-
 # Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.ethereal.email'
 app.config['MAIL_PORT'] = 587
@@ -41,16 +34,6 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 
 mail = Mail(app)
-
-# Session(app)
-
-# # Configure Flask-Limiter
-# limiter = Limiter(
-#     app,
-#     key_func=get_remote_address,  # Rate limit based on remote IP address
-#     storage_uri="memory://",  # Use in-memory storage for simplicity (use a database for production)
-#     default_limits=["5 per minute"]  # Set default rate limit: 5 requests per minute per IP
-# )
 
 @app.errorhandler(Exception)
 def internal_server_error(e):
@@ -137,8 +120,6 @@ def add_to_database():
     response = f"Data fetched and stored in database successfully at {datetime.datetime.now()}"
     app.logger.info(response)
 
-# Apply rate limiting to the specific route
-# @limiter.limit("2 per minute")  # Limit this route to 2 requests per minute per IP
 @app.route("/shipping/dropshipment", methods=["GET", "POST"])
 def index():
     try:
@@ -163,8 +144,6 @@ def index():
                 api_data = response.json()
                 add_to_session(api_data)
                 add_to_database()
-
-                
 
                 barcode = "3SKRME911535608"
                 country_code = "NL"
@@ -198,7 +177,7 @@ with app.app_context():
 
 if __name__ == '__main__':
     # Run the Flask application
-    app.run(debug=True, port=5000)
+    app.run(debug=True, host='0.0.0.0')
 # ----------------------------------------------------------------------------------------
 
 

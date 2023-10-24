@@ -27,11 +27,11 @@ Success. You can now start the database server using:
     /home/tomz/.cache/postgresqlite/14.3/bin/pg_ctl -D /home/tomz/Almec/Flask_start/template1/data/postgresqlite/pgdata -l logfile start
 
 PostgreSQL daemon is starting..
-2023-10-24 09:00:34.869 CEST [3000] LOG:  starting PostgreSQL 14.3 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.1.0, 64-bit
-2023-10-24 09:00:34.869 CEST [3000] LOG:  listening on IPv6 address "::1", port 51040
-2023-10-24 09:00:34.869 CEST [3000] LOG:  listening on IPv4 address "127.0.0.1", port 51040
-2023-10-24 09:00:34.875 CEST [3000] LOG:  listening on Unix socket "/tmp/postgresqlite-undxItSV/.s.PGSQL.51040"
-2023-10-24 09:00:34.886 CEST [3002] LOG:  database system was shut down at 2023-10-24 09:00:33 CEST
-2023-10-24 09:00:34.892 CEST [3000] LOG:  database system is ready to accept connections
+2023-10-24 11:25:45.574 CEST [18151] LOG:  starting PostgreSQL 14.3 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.1.0, 64-bit
+2023-10-24 11:25:45.575 CEST [18151] LOG:  listening on IPv6 address "::1", port 58836
+2023-10-24 11:25:45.575 CEST [18151] LOG:  listening on IPv4 address "127.0.0.1", port 58836
+2023-10-24 11:25:45.580 CEST [18151] LOG:  listening on Unix socket "/tmp/postgresqlite-ZCijNYGV/.s.PGSQL.58836"
+2023-10-24 11:25:45.593 CEST [18153] LOG:  database system was shut down at 2023-10-24 11:25:44 CEST
+2023-10-24 11:25:45.605 CEST [18151] LOG:  database system is ready to accept connections
 PostgreSQLite now has 1 client(s)
 PostgreSQLite now has 2 client(s)
