@@ -25,7 +25,7 @@ class TestApp(unittest.TestCase):
         response = self.app.post('/', json=mock_response)
 
         # Assert the status code
-        # self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         # Assert that the session data is set correctly
         with app.test_request_context('/'):

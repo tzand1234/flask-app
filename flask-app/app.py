@@ -58,7 +58,7 @@ def add_to_session(api_data):
     data = {}
 
     for key, value in api_data.items():
-        if key == "id" or key in data:
+        if key == "id" or key in session['data']:
             continue
         data[key] = value
 
@@ -73,32 +73,32 @@ def add_to_session(api_data):
         print('dictionary saved successfully to file')
 
 # def add_to_database():
-    """
-    Description:
-        Adds info from response to Database.    
-    """
+    # """
+    # Description:
+    #     Adds info from response to Database.    
+    # """
 
-    # Get info from session
-    data = session['data']
+    # # Get info from session
+    # data = session['data']
 
-    try:
-        # Attempt to insert a new record
-        query = sa.insert(Pick_list).values(data)
-        with db.engine.begin() as dbc:
-            dbc.execute(query)
+    # try:
+    #     # Attempt to insert a new record
+    #     query = sa.insert(Pick_list).values(data)
+    #     with db.engine.begin() as dbc:
+    #         dbc.execute(query)
 
-    except Exception as e:
-        # Handle unique constraint violation or other exceptions
-        # Log the exception or handle it based on your application's requirements
+    # except Exception as e:
+    #     # Handle unique constraint violation or other exceptions
+    #     # Log the exception or handle it based on your application's requirements
 
-        # Assuming idpicklist is defined somewhere before this try-except block
-        # If the record exists, update it with the new data
-        query = sa.update(Pick_list).where(Pick_list.idpicklist == idpicklist).values(data)
-        with db.engine.begin() as dbc:
-            dbc.execute(query)
+    #     # Assuming idpicklist is defined somewhere before this try-except block
+    #     # If the record exists, update it with the new data
+    #     query = sa.update(Pick_list).where(Pick_list.idpicklist == idpicklist).values(data)
+    #     with db.engine.begin() as dbc:
+    #         dbc.execute(query)
     
-    response = f"Data fetched and stored in database successfully at {datetime.datetime.now()}"
-    app.logger.info(response)
+    # response = f"Data fetched and stored in database successfully at {datetime.datetime.now()}"
+    # app.logger.info(response)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
