@@ -8,11 +8,14 @@ import traceback
 import json
 import logging
 import secrets
-import pickle
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__, template_folder='templates')
 
-logging.basicConfig(filename='record.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
+load_dotenv()  # Load environment variables from .env file
+
+logging.basicConfig(filename= os.getenv("DIRECTORY_LOG"), level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
 # Configure Flask app settings
 app.config['SECRET_KEY'] = secrets.token_hex(16)
@@ -21,130 +24,77 @@ app.config['SECRET_KEY'] = secrets.token_hex(16)
 def internal_server_error(e):
     """
     Description:
-        Runs when there is a error. Also adds to the log what the error is.
+        Runs when there is an error. Logs the error and provides a user-friendly error message.
 
     Args:
-        e (The error): A basic description of the following error
+        e (Exception): The error object.
 
     Returns:
-        A json file: Text about the error. Contains a message and the traceback.
+        A rendered template with an error message.
     """
-    # Log the error with file and line information
     error_message = str(e)
-
     traceback_info = traceback.format_exc().strip().split("\n")
-
     traceback_info = [string.replace('^', '') for string in traceback_info]
-    
-    # Return an error response with JSON including the error message and traceback
+
     response = {
         "message": error_message,
         "traceback": traceback_info
     }
 
-    # Log the error to record.log
-    app.logger.info(response)
+    app.logger.error(response)  # Log the error to record.log
+    flash('An error occurred')
     
-    # Return the json file with the error
-    return jsonify(response), 500
+    return render_template('auth/error.html', error_message=response)
 
 def add_to_session(api_data):
     """
     Description:
-        Adds info from response to session.
+        Adds info from the API response to the session and stores it in a JSON file.
+
+    Args:
+        api_data (dict): API response data.
+
+    Returns:
+        None
     """
-
-    # Initialize the database dict
     data = {}
-
     for key, value in api_data.items():
-        if key == "id" or key in session['data']:
+        if key == "id" or key in session.get('data', {}):
             continue
         data[key] = value
 
     if data:
         session['data'] = data  # Store the data in the session
-        
-    response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
-    app.logger.info(response)
 
-    with open('json_data.pkl', 'wb') as fp:
-        pickle.dump(data, fp)
-        print('dictionary saved successfully to file')
+        with open("Logs/dict.json", "w") as json_file:
+            json.dump(data, json_file)  # Write data to JSON file
 
-# def add_to_database():
-    # """
-    # Description:
-    #     Adds info from response to Database.    
-    # """
-
-    # # Get info from session
-    # data = session['data']
-
-    # try:
-    #     # Attempt to insert a new record
-    #     query = sa.insert(Pick_list).values(data)
-    #     with db.engine.begin() as dbc:
-    #         dbc.execute(query)
-
-    # except Exception as e:
-    #     # Handle unique constraint violation or other exceptions
-    #     # Log the exception or handle it based on your application's requirements
-
-    #     # Assuming idpicklist is defined somewhere before this try-except block
-    #     # If the record exists, update it with the new data
-    #     query = sa.update(Pick_list).where(Pick_list.idpicklist == idpicklist).values(data)
-    #     with db.engine.begin() as dbc:
-    #         dbc.execute(query)
-    
-    # response = f"Data fetched and stored in database successfully at {datetime.datetime.now()}"
-    # app.logger.info(response)
+        response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
+        app.logger.info(response)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    try:
-        if request.method == "POST":
-            # Get JSON data from the POST request
-            api_data = request.get_json()
+    if request.method == "POST":
+        try:
+            api_data = request.get_json()  # Get JSON data from the POST request
+            add_to_session(api_data)  # Add data to session
+            idorder = session.get('data', {}).get('picklist', {}).get('idorder')
 
-            # Add data to session and database
-            add_to_session(api_data)
-            # add_to_database()
-
-            if 'data' in session:
-                idorder = session['data']['picklist']['idorder']
-                api_url = f"https://almec-supplies.picqer.com/api/v1/orders/{idorder}"
-
-                # Make a GET request to the API endpoint
+            if idorder:
+                # Get API URL from environment variable
+                api_url = os.getenv("API_URL") + f"{idorder}"
                 response = requests.get(api_url)
-                
-                response.raise_for_status()  # Raise exception for 4xx and 5xx status codes
-
-                # Parse JSON response and add to session and database
                 api_data = response.json()
-                add_to_session(api_data)
-                # add_to_database()
+                add_to_session(api_data)  # Update session data
 
-                result = session['data']
-
+            result = session.get('data', {})
             return render_template('blog/dashboard.html', api_data_list=result)
-        else:
-            return render_template('blog/dashboard.html')
 
+        except Exception as e:
+            return internal_server_error(e)  # Handle exceptions
 
-    except requests.exceptions.HTTPError as err:
-        # Handle HTTP errors from the API request
-        response = f"API request failed at {datetime.datetime.now()}" 
-        # Log the error to record.log
-        app.logger.info(response)
-        return internal_server_error(f"API Error: {err}")
-    except Exception as e:
-        response = f"API request failed at {datetime.datetime.now()}" 
-        # Log the error to record.log
-        app.logger.info(response)
-        # Handle other exceptions
-        return internal_server_error(e)
-
+    else:
+        return render_template('blog/dashboard.html')
 
 if __name__ == '__main__':
     # Run the Flask application
@@ -223,6 +173,7 @@ def fetch_and_send_data():
     return render_template('index.html', api_data_list=result)
 
 def send_mail(link=None, subject=None, sender=None, recipients=None):
+
     """
     Send a message to via email.
 
@@ -247,13 +198,45 @@ def send_mail(link=None, subject=None, sender=None, recipients=None):
 
 
 
-            # # Select all records from Pick_list
-            # query = sa.select(Pick_list)
+  
+  
+  
+# # Select all records from Pick_list
+# query = sa.select(Pick_list)
 
-            # # Execute the query using SQLAlchemy
-            # with db.engine.begin() as dbc:
-            #     result = dbc.execute(query)
+# # Execute the query using SQLAlchemy
+# with db.engine.begin() as dbc:
+#     result = dbc.execute(query)
 
-        # response = f"API request failed at {datetime.datetime.now()}" 
-        # # Log the error to record.log
-        # app.logger.info(response)
+# response = f"API request failed at {datetime.datetime.now()}" 
+# # Log the error to record.log
+# app.logger.info(response)
+
+
+# def add_to_database():
+    # """
+    # Description:
+    #     Adds info from response to Database.    
+    # """
+
+    # # Get info from session
+    # data = session['data']
+
+    # try:
+    #     # Attempt to insert a new record
+    #     query = sa.insert(Pick_list).values(data)
+    #     with db.engine.begin() as dbc:
+    #         dbc.execute(query)
+
+    # except Exception as e:
+    #     # Handle unique constraint violation or other exceptions
+    #     # Log the exception or handle it based on your application's requirements
+
+    #     # Assuming idpicklist is defined somewhere before this try-except block
+    #     # If the record exists, update it with the new data
+    #     query = sa.update(Pick_list).where(Pick_list.idpicklist == idpicklist).values(data)
+    #     with db.engine.begin() as dbc:
+    #         dbc.execute(query)
+    
+    # response = f"Data fetched and stored in database successfully at {datetime.datetime.now()}"
+    # app.logger.info(response)

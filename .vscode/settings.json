@@ -29,6 +29,7 @@
     "deliveryname",
     "deliveryregion",
     "deliveryzipcode",
+    "dotenv",
     "dropshipment",
     "dynweb",
     "emailaddress",
