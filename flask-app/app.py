@@ -8,12 +8,11 @@ import traceback
 import json
 import logging
 import secrets
-from dotenv import load_dotenv
 import os
 
-app = Flask(__name__, template_folder='templates')
+# source ~/.venvs/flask/bin/activate
 
-load_dotenv()  # Load environment variables from .env file
+app = Flask(__name__, template_folder='templates')
 
 logging.basicConfig(filename= os.getenv("DIRECTORY_LOG"), level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
@@ -66,7 +65,7 @@ def add_to_session(api_data):
     if data:
         session['data'] = data  # Store the data in the session
 
-        with open("Logs/dict.json", "w") as json_file:
+        with open(os.getenv("FILE_LOG"), "w") as json_file:
             json.dump(data, json_file)  # Write data to JSON file
 
         response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
@@ -197,10 +196,6 @@ def send_mail(link=None, subject=None, sender=None, recipients=None):
     app.logger.info(response)
 
 
-
-  
-  
-  
 # # Select all records from Pick_list
 # query = sa.select(Pick_list)
 
