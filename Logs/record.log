@@ -1,0 +1,28 @@
+2023-10-25 13:29:15,500 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-25 13:29:15.500496
+2023-10-25 13:29:17,279 ERROR app MainThread : {'message': "module 'os' has no attribute 'getnv'", 'traceback': ['Traceback (most recent call last):', '  File "/home/tomz/Almec/Flask_start/template1/flask-app/app.py", line 85, in index', '    api_url = os.getnv("API_URL") + f"{idorder}"', '              ', "AttributeError: module 'os' has no attribute 'getnv'"]}
+2023-10-25 13:34:38,432 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-25 13:34:38.432188
+2023-10-25 14:30:46,580 INFO werkzeug MainThread : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-10-25 14:30:46,580 INFO werkzeug MainThread : [33mPress CTRL+C to quit[0m
+2023-10-25 14:30:46,582 INFO werkzeug MainThread :  * Restarting with stat
+2023-10-25 14:30:48,127 WARNING werkzeug MainThread :  * Debugger is active!
+2023-10-25 14:30:48,128 INFO werkzeug MainThread :  * Debugger PIN: 122-407-575
+2023-10-25 14:31:12,011 INFO werkzeug Thread-7 (process_request_thread) : 127.0.0.1 - - [25/Oct/2023 14:31:12] "GET / HTTP/1.1" 200 -
+2023-10-25 14:31:12,119 INFO werkzeug Thread-8 (process_request_thread) : 127.0.0.1 - - [25/Oct/2023 14:31:12] "[36mGET /static/form.css HTTP/1.1[0m" 304 -
+2023-10-25 14:31:13,314 ERROR app Thread-9 (process_request_thread) : {'message': '404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.', 'traceback': ['Traceback (most recent call last):', '  File "/home/tomz/.local/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request', '    rv = self.dispatch_request()', '         ', '  File "/home/tomz/.local/lib/python3.11/site-packages/flask/app.py", line 1458, in dispatch_request', '    self.raise_routing_exception(req)', '  File "/home/tomz/.local/lib/python3.11/site-packages/flask/app.py", line 1440, in raise_routing_exception', '    raise request.routing_exception  # type: ignore', '    ', '  File "/home/tomz/.local/lib/python3.11/site-packages/flask/ctx.py", line 353, in match_request', '    result = self.url_adapter.match(return_rule=True)  # type: ignore', '             ', '  File "/home/tomz/.local/lib/python3.11/site-packages/werkzeug/routing/map.py", line 655, in match', '    raise NotFound() from None', 'werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.']}
+2023-10-25 14:31:13,356 INFO werkzeug Thread-9 (process_request_thread) : 127.0.0.1 - - [25/Oct/2023 14:31:13] "GET /favicon.ico HTTP/1.1" 200 -
+2023-10-25 14:31:23,042 INFO werkzeug MainThread : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-10-25 14:31:23,042 INFO werkzeug MainThread : [33mPress CTRL+C to quit[0m
+2023-10-25 14:31:23,043 INFO werkzeug MainThread :  * Restarting with stat
+2023-10-25 14:31:24,562 WARNING werkzeug MainThread :  * Debugger is active!
+2023-10-25 14:31:24,562 INFO werkzeug MainThread :  * Debugger PIN: 122-407-575
+2023-10-25 14:31:33,414 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-25 14:31:33.413936
+2023-10-25 14:31:52,365 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-25 14:31:52.365563
+2023-10-25 14:42:21,399 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-25 14:42:21.398891
+2023-10-25 14:42:36,003 INFO werkzeug MainThread : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-10-25 14:42:36,003 INFO werkzeug MainThread : [33mPress CTRL+C to quit[0m
+2023-10-25 14:42:36,005 INFO werkzeug MainThread :  * Restarting with stat
+2023-10-25 14:42:37,534 WARNING werkzeug MainThread :  * Debugger is active!
+2023-10-25 14:42:37,536 INFO werkzeug MainThread :  * Debugger PIN: 122-407-575
