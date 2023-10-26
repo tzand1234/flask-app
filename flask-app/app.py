@@ -65,7 +65,7 @@ def send_email(response):
             mail.connect()
 
             # Create the email message
-            msg = Message('There has been an error', sender='tom@almec.nl', recipients=['tom@almec.nl'])
+            msg = Message('There has been an error', sender=os.getenv("MAIL_USERNAME"), recipients=[os.getenv("MAIL_USERNAME")])
             msg.body = f"{response}"
 
             # Send the email
@@ -107,7 +107,7 @@ def add_to_session(api_data):
     else:
         return None
 
-@app.route("/djsh", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         try:
@@ -129,7 +129,8 @@ def index():
             return internal_server_error(e)  # Handle exceptions
 
     else:
-        return render_template('blog/dashboard.html')
+        result = session.get('data', {})
+        return render_template('blog/dashboard.html', api_data_list=result)
 
 if __name__ == '__main__':
     # Run the Flask application
