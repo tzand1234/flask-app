@@ -113,11 +113,11 @@ def index():
         try:
             api_data = request.get_json()  # Get JSON data from the POST request
             add_to_session(api_data)  # Add data to session
-            idorder = session.get('data', {}).get('picklist', {}).get('idorder')
+            idorder = str(session.get('data', {}).get('picklist', {}).get('idorder'))
 
             if idorder:
                 # Get API URL from environment variable
-                api_url = os.getenv("API_URL") + f"{idorder}"
+                api_url = os.getenv("API_URL") + idorder
                 response = requests.get(api_url)
                 api_data = response.json()
                 add_to_session(api_data)  # Update session data
