@@ -118,6 +118,7 @@ def index():
             if idorder:
                 # Get API URL from environment variable
                 api_url = os.getenv("API_URL") + idorder
+                api_url = api_url.replace('"','')
 
                 # Making a GET request with basic authentication
                 response = requests.get(api_url, auth=(os.getenv("USERNAME_PICKER"), os.getenv("PASSWORD_PICKER")))
