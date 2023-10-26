@@ -126,7 +126,8 @@ def index():
                 add_to_session(api_data)  # Update session data
  
             result = session.get('data', {})
-            return render_template('blog/dashboard.html', api_data_list=result)
+            return result
+            # return render_template('blog/dashboard.html', api_data_list=result)
 
         except Exception as e:
             return internal_server_error(e)  # Handle exceptions
