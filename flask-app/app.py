@@ -14,6 +14,16 @@ import os
 
 app = Flask(__name__, template_folder='templates')
 
+# Flask-Mail configuration for Outlook
+app.config['MAIL_SERVER'] = 'smtp-mail.outlook.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
+
+mail = Mail(app)
+
 logging.basicConfig(filename= os.getenv("DIRECTORY_LOG"), level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
 # Configure Flask app settings
@@ -39,6 +49,10 @@ def internal_server_error(e):
         "message": error_message,
         "traceback": traceback_info
     }
+
+    msg = Message('There has been an error', sender='tom@almec.nl', recipients=['tom@almec.nl'])
+    msg.body = f"{response}"
+    mail.send(msg)
 
     app.logger.error(response)  # Log the error to record.log
     flash('An error occurred')
@@ -74,7 +88,7 @@ def add_to_session(api_data):
     else:
         return None
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/djsh", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         try:
@@ -101,140 +115,3 @@ def index():
 if __name__ == '__main__':
     # Run the Flask application
     app.run(debug=True)
-# ----------------------------------------------------------------------------------------
-
-def login():
-    """Handles the login page."""
-    
-    form = LoginForm()
-
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-
-        user = User.query.filter_by(name=username).first()
-
-        if user:
-            if user.password == password:
-                return render_template("dashboard.html")
-            
-
-        user = User(name=username, password= generate_password_hash(password))
-        db.session.add(user)
-        db.session.commit()
-        login_user(user)
-
-        return render_template("dashboard.html")
-
-    return render_template("login.html", form=form)
-
-def fetch_and_send_data():
-    """_summary_
-
-    Returns:
-        _type_: _description_
-    """
-    
-    try:
-        # Replace these values with your own data
-        username = session.get('username')
-        password = session.get('password')
-
-
-        # The data you want to send to the endpoint (replace with your own data)
-        data = {
-            "identifier": "3SAPPL80237480",
-            "trackingurl": "https://example.com/shipment/3SAPPL80237480",
-            "carrier_key": "postnl",
-            "label_contents_pdf": "--BASE64 ENCODED VERSION OF PDF--",
-            "label_contents_zpl": "--BASE64 ENCODED VERSION OF ZPL--"
-        }
-
-        # Add Basic Auth headers to the request
-        headers = {
-            "Authorization": f"Basic {base64.b64encode(f'{username}:{password}').decode('utf-8')}",
-            "Content-Type": "application/json"  # Adjust this if the API expects a different type
-        }
-
-        # Make a POST request to the endpoint with the data and headers
-        response = requests.post(api_url, json=data, headers=headers)
-
-        # Check the response status code to see if the request was successful
-        if response.status_code == 200:
-            flash("The request was successful.")
-        else:
-            flash("API request failed")
-
-    except Exception as e:
-        return internal_server_error(e)
-
-    query = sa.select(Pick_list)
-    with db.engine.begin() as dbc:
-        result = dbc.execute(query)
-
-    return render_template('index.html', api_data_list=result)
-
-def send_mail(link=None, subject=None, sender=None, recipients=None):
-
-    """
-    Send a message to via email.
-
-    Args:
-        subject (str): The subject of the email. Defaults to None.
-        sender (str): The email of the sender. Defaults to None.
-        recipients (str): The email of recipient. Defaults to None.
-    """
-
-    msg = Message(
-    subject="An error has occurred", 
-    sender="maude.cronin@ethereal.email", 
-    recipients=["tom"]
-    )
-
-    link = "https://docs.api.postnl.nl/#tag/Shipment/paths/~1shipment~1v2_2~1label/post"
-    msg.html = f"Click the following link to see your track and trace: <a href='{link}'>Click here</a>"
-    mail.send(msg)
-
-    response = f"Email send successfully at {datetime.datetime.now()}"
-    app.logger.info(response)
-
-
-# # Select all records from Pick_list
-# query = sa.select(Pick_list)
-
-# # Execute the query using SQLAlchemy
-# with db.engine.begin() as dbc:
-#     result = dbc.execute(query)
-
-# response = f"API request failed at {datetime.datetime.now()}" 
-# # Log the error to record.log
-# app.logger.info(response)
-
-
-# def add_to_database():
-    # """
-    # Description:
-    #     Adds info from response to Database.    
-    # """
-
-    # # Get info from session
-    # data = session['data']
-
-    # try:
-    #     # Attempt to insert a new record
-    #     query = sa.insert(Pick_list).values(data)
-    #     with db.engine.begin() as dbc:
-    #         dbc.execute(query)
-
-    # except Exception as e:
-    #     # Handle unique constraint violation or other exceptions
-    #     # Log the exception or handle it based on your application's requirements
-
-    #     # Assuming idpicklist is defined somewhere before this try-except block
-    #     # If the record exists, update it with the new data
-    #     query = sa.update(Pick_list).where(Pick_list.idpicklist == idpicklist).values(data)
-    #     with db.engine.begin() as dbc:
-    #         dbc.execute(query)
-    
-    # response = f"Data fetched and stored in database successfully at {datetime.datetime.now()}"
-    # app.logger.info(response)
