@@ -50,14 +50,33 @@ def internal_server_error(e):
         "traceback": traceback_info
     }
 
-    msg = Message('There has been an error', sender='tom@almec.nl', recipients=['tom@almec.nl'])
-    msg.body = f"{response}"
-    mail.send(msg)
-
+    send_email(response)
+    
     app.logger.error(response)  # Log the error to record.log
     flash('An error occurred')
     
     return render_template('auth/error.html', error_message=response)
+
+
+def send_email(response):
+    try:
+        # Establish the SMTP connection
+        with app.app_context():
+            mail.connect()
+
+            # Create the email message
+            msg = Message('There has been an error', sender='tom@almec.nl', recipients=['tom@almec.nl'])
+            msg.body = f"{response}"
+
+            # Send the email
+            mail.send(msg)
+
+            # Disconnect after sending the email
+            mail.disconnect()
+
+        return 'Email sent!'
+    except Exception as e:
+        return f'Error: {str(e)}'
 
 def add_to_session(api_data):
     """
