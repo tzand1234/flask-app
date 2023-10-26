@@ -118,7 +118,11 @@ def index():
             if idorder:
                 # Get API URL from environment variable
                 api_url = os.getenv("API_URL") + idorder
-                response = requests.get(api_url)
+
+
+                password = os.getenv("PASSWORD_PICKER")
+                # Making a GET request with basic authentication
+                response = requests.get(api_url, auth=(os.getenv("USERNAME_PICKER"), os.getenv("PASSWORD_PICKER")))
                 api_data = response.json()
                 add_to_session(api_data)  # Update session data
 
