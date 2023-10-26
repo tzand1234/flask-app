@@ -97,8 +97,12 @@ def add_to_session(api_data: dict, data : dict):
     if data:
         session['data'] = data  # Store the data in the session
 
-        with open(os.getenv("FILE_LOG"), "w") as json_file:
-            json.dump(data, json_file)  # Write data to JSON file
+        # Open the file in append mode
+        with open(os.getenv("FILE_LOG"), "a") as json_file:
+            # Write data to JSON file
+            json.dump(data, json_file)
+            # Add a newline character to separate the dictionaries in the file
+            json_file.write("\n")
 
         response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
         app.logger.info(response)
@@ -121,7 +125,7 @@ def index():
                 api_url = api_url.replace('"','')
 
                 # Making a GET request with basic authentication
-                response = requests.get(api_url, auth=(os.getenv("USERNAME_PICKER"), os.getenv("PASSWORD_PICKER")))
+                response = requests.get(api_url, auth=os.getenv("API_KEY_PICKER") )
                 api_data = response.json()
                 add_to_session(api_data, data)  # Update session data
  
