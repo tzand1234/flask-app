@@ -1,4 +1,4 @@
 *.pyc
-*.test_app
+test_app.py
 /Test
-
+/Help
