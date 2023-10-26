@@ -78,7 +78,7 @@ def send_email(response):
     except Exception as e:
         return f'Error: {str(e)}'
 
-def add_to_session(api_data):
+def add_to_session(api_data: dict, data : dict):
     """
     Description:
         Adds info from the API response to the session and stores it in a JSON file.
@@ -89,7 +89,6 @@ def add_to_session(api_data):
     Returns:
         None
     """
-    data = {}
     for key, value in api_data.items():
         if key == "id" or key in session.get('data', {}):
             continue
@@ -111,8 +110,9 @@ def add_to_session(api_data):
 def index():
     if request.method == "POST":
         try:
+            data = {}
             api_data = request.get_json()  # Get JSON data from the POST request
-            add_to_session(api_data)  # Add data to session
+            add_to_session(api_data, data)  # Add data to session
             idorder = str(session.get('data', {}).get('picklist', {}).get('idorder'))
 
             if idorder:
@@ -123,7 +123,7 @@ def index():
                 # Making a GET request with basic authentication
                 response = requests.get(api_url, auth=(os.getenv("USERNAME_PICKER"), os.getenv("PASSWORD_PICKER")))
                 api_data = response.json()
-                add_to_session(api_data)  # Update session data
+                add_to_session(api_data, data)  # Update session data
  
             result = session.get('data', {})
             return result
@@ -133,8 +133,7 @@ def index():
             return internal_server_error(e)  # Handle exceptions
 
     else:
-        result = session.get('data', {})
-        return render_template('blog/dashboard.html', api_data_list=result)
+        return render_template('blog/dashboard.html')
 
 if __name__ == '__main__':
     # Run the Flask application
