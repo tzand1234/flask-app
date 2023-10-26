@@ -125,7 +125,7 @@ def index():
                 api_url = api_url.replace('"','')
 
                 # Making a GET request with basic authentication
-                response = requests.get(api_url, auth=os.getenv("API_KEY_PICKER") )
+                response = requests.get(api_url, auth=(os.getenv("API_KEY_PICKER"), ''))
                 api_data = response.json()
                 add_to_session(api_data, data)  # Update session data
  
