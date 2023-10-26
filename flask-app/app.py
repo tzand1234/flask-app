@@ -71,6 +71,9 @@ def add_to_session(api_data):
         response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
         app.logger.info(response)
 
+    else:
+        return None
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -183,9 +186,9 @@ def send_mail(link=None, subject=None, sender=None, recipients=None):
     """
 
     msg = Message(
-    subject="Your track and trace link.", 
+    subject="An error has occurred", 
     sender="maude.cronin@ethereal.email", 
-    recipients=["maude.cronin@ethereal.email"]
+    recipients=["tom"]
     )
 
     link = "https://docs.api.postnl.nl/#tag/Shipment/paths/~1shipment~1v2_2~1label/post"

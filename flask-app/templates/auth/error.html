@@ -3,13 +3,15 @@
 {% endblock %} {% block body %}
 
 <div class="container">
-  {% with messages = get_flashed_messages() %} {% if messages %}
-  <ul class="flash">
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %} {% endwith %}
-  <a href="/" style="margin: 0" class="logout-button">Go back to login</a>
+  {% with messages = get_flashed_messages() %} {% if messages %} {% for message
+  in messages %}
+  <h1>{{ message }}:</h1>
+  {% endfor %} {% endif %} {% endwith %}
+  <ol>
+    <h2>Message</h2>
+    <p>{{ error_message.message }}</p>
+    <h2>Traceback</h2>
+    <p>{{ error_message.traceback }}</p>
+  </ol>
 </div>
 {% endblock %}

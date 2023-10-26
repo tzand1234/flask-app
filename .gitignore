@@ -1,2 +1,4 @@
 *.pyc
-*.env 
+*.test_app
+/Test
+
