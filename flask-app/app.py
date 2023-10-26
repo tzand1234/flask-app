@@ -124,7 +124,7 @@ def index():
                 response = requests.get(api_url, auth=(os.getenv("USERNAME_PICKER"), os.getenv("PASSWORD_PICKER")))
                 api_data = response.json()
                 add_to_session(api_data)  # Update session data
-
+ 
             result = session.get('data', {})
             return render_template('blog/dashboard.html', api_data_list=result)
 
