@@ -168,16 +168,16 @@ def index():
                                 "City": session.get('data', {}).get('invoicecity'),
                                 "CompanyName": session.get('data', {}).get('invoicename'),
                                 "Countrycode": session.get('data', {}).get('invoicecountry'),
-                                "Name": session.get('data', {}).get('picklist', {}).get('deliveryname'),
+                                "Name": session.get('data', {}).get('picklist', {}).get('invoicecontact'),
                                 "StreetHouseNrExt": session.get('data', {}).get('invoiceaddress'),
-                                "Zipcode": session.get('data', {}).get('invoicecity')
+                                "Zipcode": session.get('data', {}).get('invoicezipcode')
                             },
                             {
                                 "AddressType": "01",
                                 "City": session.get('data', {}).get('picklist', {}).get('deliverycity'),
                                 "CompanyName": session.get('data', {}).get('picklist', {}).get('deliveryname'),
                                 "Countrycode": session.get('data', {}).get('picklist', {}).get('deliverycountry'),
-                                "Name": session.get('data', {}).get('picklist', {}).get('deliveryname'),
+                                "Name": session.get('data', {}).get('picklist', {}).get('deliverycontact'),
                                 "StreetHouseNrExt": session.get('data', {}).get('picklist', {}).get('deliveryaddress'),
                                 "Zipcode": session.get('data', {}).get('picklist', {}).get('deliveryzipcode')
                             }
