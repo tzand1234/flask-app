@@ -144,6 +144,8 @@ def index():
             api_data = response.json()
             add_to_session(api_data, data)  # Update session data
 
+            test = session.get('data', {}).get('invoicecountry')
+
             data = {
                 "Customer": {
                     "CollectionLocation": os.getenv("COLLECTION_LOCATION"),
@@ -195,11 +197,22 @@ def index():
                 ]
             }
 
+            # Authentication credentials (replace 'YOUR_API_KEY' with your actual API key)
+            api_key = 'MeXi0GWVeHDiWB4wWW0EoehDAPnfBOtB'
 
-            
+            # Prepare the headers with the API key
+            headers = {
+                'apikey': api_key,
+                'Content-Type': 'application/json'
+            }
 
-            result = session.get('data', {})
-            return data
+            # Make the API request with headers
+            response = requests.post("https://api-sandbox.postnl.nl/shipment/v2_2/label", headers=headers, json=data)
+
+            api_data = response.json()
+
+            return api_data
+
 
         except Exception as e:
             return internal_server_error(e)  # Handle exceptions

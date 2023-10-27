@@ -11,3 +11,151 @@
 2023-10-27 11:02:05,219 ERROR app MainThread : {'message': "type object 'datetime.datetime' has no attribute 'datetime'", 'traceback': ['Traceback (most recent call last):', '  File "/home/tomz/Almec/Flask_start/template1/flask-app/app.py", line 136, in index', '    add_to_session(api_data, data)  # Add data to session', '    ', '  File "/home/tomz/Almec/Flask_start/template1/flask-app/app.py", line 110, in add_to_session', '    response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"', '                                                                     ', "AttributeError: type object 'datetime.datetime' has no attribute 'datetime'"]}
 2023-10-27 11:03:53,084 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:03:52.369037
 2023-10-27 11:04:52,357 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:04:51.606386
+2023-10-27 11:20:08,037 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:20:08.036856
+2023-10-27 11:20:08,037 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:20:08.037837
+2023-10-27 11:20:32,599 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:20:32.599517
+2023-10-27 11:20:32,600 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:20:32.600397
+2023-10-27 11:22:13,706 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:22:13.706756
+2023-10-27 11:22:13,707 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:22:13.707564
+2023-10-27 11:22:15,287 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 11:22:15,407 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 401 108
+2023-10-27 11:24:48,449 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:24:48.449731
+2023-10-27 11:24:48,450 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:24:48.450558
+2023-10-27 11:24:51,416 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 11:24:51,922 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 400 234
+2023-10-27 11:25:52,974 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:25:52.974591
+2023-10-27 11:25:52,975 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:25:52.975478
+2023-10-27 11:26:54,861 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 11:26:55,237 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 400 234
+2023-10-27 11:36:19,226 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:36:19.225765
+2023-10-27 11:36:19,226 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:36:19.226701
+2023-10-27 11:36:32,841 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 11:36:33,288 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 400 234
+2023-10-27 11:38:31,390 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:38:31.390122
+2023-10-27 11:38:31,391 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:38:31.391060
+2023-10-27 11:38:46,030 INFO werkzeug MainThread : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-10-27 11:38:46,030 INFO werkzeug MainThread : [33mPress CTRL+C to quit[0m
+2023-10-27 11:38:46,031 INFO werkzeug MainThread :  * Restarting with stat
+2023-10-27 11:38:47,598 WARNING werkzeug MainThread :  * Debugger is active!
+2023-10-27 11:38:47,598 INFO werkzeug MainThread :  * Debugger PIN: 690-334-214
+2023-10-27 11:38:59,209 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:38:59.209700
+2023-10-27 11:38:59,210 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:38:59.210507
+2023-10-27 11:39:08,559 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 11:39:08,932 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 400 124
+2023-10-27 11:46:18,947 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:46:18.947302
+2023-10-27 11:46:18,948 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:46:18.948161
+2023-10-27 11:46:29,993 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 11:46:30,315 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 400 124
+2023-10-27 11:47:34,148 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:47:34.148071
+2023-10-27 11:47:34,149 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:47:34.149092
+2023-10-27 11:47:38,873 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 11:47:39,288 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 400 124
+2023-10-27 11:48:03,254 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:48:03.254426
+2023-10-27 11:48:03,255 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:48:03.255290
+2023-10-27 11:48:16,280 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 11:48:16,619 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 400 124
+2023-10-27 11:48:43,846 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:48:43.846136
+2023-10-27 11:48:43,847 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:48:43.847037
+2023-10-27 11:48:52,797 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 11:48:53,803 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 400 161
+2023-10-27 11:49:37,299 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:49:37.299372
+2023-10-27 11:49:37,300 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:49:37.300231
+2023-10-27 11:51:06,549 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:51:06.548897
+2023-10-27 11:51:06,549 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:51:06.549714
+2023-10-27 11:53:25,466 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:53:25.466322
+2023-10-27 11:53:25,467 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:53:25.467251
+2023-10-27 11:54:11,781 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:54:11.781416
+2023-10-27 11:54:11,782 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:54:11.782323
+2023-10-27 11:58:22,888 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:58:22.888214
+2023-10-27 11:58:22,889 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:58:22.889055
+2023-10-27 12:00:27,093 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:00:27.093574
+2023-10-27 12:00:27,094 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:00:27.094451
+2023-10-27 12:00:54,819 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:00:54.819760
+2023-10-27 12:00:54,820 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:00:54.820633
+2023-10-27 12:01:33,530 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:01:33.530762
+2023-10-27 12:01:33,531 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:01:33.531577
+2023-10-27 12:02:08,155 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:02:08.155339
+2023-10-27 12:02:08,156 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:02:08.156332
+2023-10-27 12:02:21,497 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:02:21.497139
+2023-10-27 12:02:21,497 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:02:21.497949
+2023-10-27 12:04:05,339 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:04:05.339634
+2023-10-27 12:04:05,340 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:04:05.340513
+2023-10-27 12:04:49,127 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:04:49.126728
+2023-10-27 12:04:49,127 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:04:49.127693
+2023-10-27 12:10:13,252 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:10:13.252011
+2023-10-27 12:10:13,252 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:10:13.252837
+2023-10-27 12:10:37,557 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:10:37.556918
+2023-10-27 12:10:37,557 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:10:37.557742
+2023-10-27 12:10:41,801 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 12:10:42,180 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 400 161
+2023-10-27 12:12:18,173 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:12:18.173241
+2023-10-27 12:12:18,174 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:12:18.174202
+2023-10-27 12:16:07,426 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:16:07.425808
+2023-10-27 12:16:07,426 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:16:07.426627
+2023-10-27 12:17:12,364 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:17:12.364592
+2023-10-27 12:17:12,365 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:17:12.365435
+2023-10-27 12:18:27,978 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:18:27.978655
+2023-10-27 12:18:27,979 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:18:27.979480
+2023-10-27 12:18:43,458 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:18:43.458638
+2023-10-27 12:21:23,088 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:21:23.088197
+2023-10-27 12:22:19,036 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:22:19.035518
+2023-10-27 12:22:40,303 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:22:40.303083
+2023-10-27 12:23:57,696 INFO werkzeug MainThread : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-10-27 12:23:57,697 INFO werkzeug MainThread : [33mPress CTRL+C to quit[0m
+2023-10-27 12:23:57,699 INFO werkzeug MainThread :  * Restarting with stat
+2023-10-27 12:23:59,172 WARNING werkzeug MainThread :  * Debugger is active!
+2023-10-27 12:23:59,173 INFO werkzeug MainThread :  * Debugger PIN: 690-334-214
+2023-10-27 12:24:41,223 INFO werkzeug MainThread : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-10-27 12:24:41,223 INFO werkzeug MainThread : [33mPress CTRL+C to quit[0m
+2023-10-27 12:24:41,224 INFO werkzeug MainThread :  * Restarting with stat
+2023-10-27 12:24:42,687 WARNING werkzeug MainThread :  * Debugger is active!
+2023-10-27 12:24:42,687 INFO werkzeug MainThread :  * Debugger PIN: 690-334-214
+2023-10-27 12:24:57,240 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:24:57.240370
+2023-10-27 12:24:57,241 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:24:57.241879
+2023-10-27 12:28:10,338 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:28:10.337887
+2023-10-27 12:28:10,338 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 12:28:10.338685
+2023-10-27 13:18:02,879 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:18:02.879173
+2023-10-27 13:18:02,880 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:18:02.880062
+2023-10-27 13:18:04,810 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 13:18:05,529 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 400 161
+2023-10-27 13:19:04,095 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:19:04.094950
+2023-10-27 13:19:04,095 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:19:04.095790
+2023-10-27 13:19:21,943 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:19:21.942797
+2023-10-27 13:19:21,943 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:19:21.943660
+2023-10-27 13:19:53,176 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:19:53.175977
+2023-10-27 13:19:53,176 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:19:53.176782
+2023-10-27 13:20:21,473 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:20:21.473516
+2023-10-27 13:20:21,474 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:20:21.474367
+2023-10-27 13:20:56,468 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:20:56.467853
+2023-10-27 13:20:56,468 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:20:56.468708
+2023-10-27 13:24:31,456 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:24:31.456529
+2023-10-27 13:25:57,099 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:25:57.099596
+2023-10-27 13:26:04,120 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:26:04.120471
+2023-10-27 13:29:33,927 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:29:33.927026
+2023-10-27 13:33:58,712 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:33:58.712608
+2023-10-27 13:34:10,484 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:34:10.483787
+2023-10-27 13:34:29,719 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:34:29.719030
+2023-10-27 13:34:32,408 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:34:32.408074
+2023-10-27 13:40:41,239 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:40:41.239288
+2023-10-27 13:45:44,632 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:45:44.632117
+2023-10-27 13:46:30,224 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 13:46:30.224070
+2023-10-27 14:01:47,787 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:01:47.786944
+2023-10-27 14:01:47,787 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:01:47.787746
+2023-10-27 14:02:24,123 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:02:24.123496
+2023-10-27 14:02:24,124 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:02:24.124315
+2023-10-27 14:02:34,539 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:02:34.539074
+2023-10-27 14:02:34,540 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:02:34.539985
+2023-10-27 14:03:37,789 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:03:37.789736
+2023-10-27 14:05:18,518 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:05:18.517991
+2023-10-27 14:07:07,314 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:07:07.313874
+2023-10-27 14:07:14,615 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:07:14.615100
+2023-10-27 14:10:18,559 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:10:18.558748
+2023-10-27 14:10:35,446 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:10:35.446151
+2023-10-27 14:11:16,518 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:11:16.517861
+2023-10-27 14:13:31,149 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:13:31.149253
+2023-10-27 14:16:12,728 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 14:16:12.728303
+2023-10-27 14:16:19,485 DEBUG urllib3.connectionpool MainThread : Starting new HTTPS connection (1): api-sandbox.postnl.nl:443
+2023-10-27 14:16:19,805 DEBUG urllib3.connectionpool MainThread : https://api-sandbox.postnl.nl:443 "POST /shipment/v2_2/label HTTP/1.1" 400 161
