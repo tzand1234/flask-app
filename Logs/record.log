@@ -1,0 +1,13 @@
+2023-10-27 08:45:32,848 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 08:45:32.223615
+2023-10-27 08:46:19,627 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 08:46:19.024029
+2023-10-27 09:07:40,695 INFO werkzeug MainThread : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-10-27 09:07:40,695 INFO werkzeug MainThread : [33mPress CTRL+C to quit[0m
+2023-10-27 09:07:40,697 INFO werkzeug MainThread :  * Restarting with stat
+2023-10-27 09:07:42,298 WARNING werkzeug MainThread :  * Debugger is active!
+2023-10-27 09:07:42,299 INFO werkzeug MainThread :  * Debugger PIN: 690-334-214
+2023-10-27 09:11:49,691 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 09:11:49.691156
+2023-10-27 09:11:49,691 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 09:11:49.691953
+2023-10-27 11:02:05,219 ERROR app MainThread : {'message': "type object 'datetime.datetime' has no attribute 'datetime'", 'traceback': ['Traceback (most recent call last):', '  File "/home/tomz/Almec/Flask_start/template1/flask-app/app.py", line 136, in index', '    add_to_session(api_data, data)  # Add data to session', '    ', '  File "/home/tomz/Almec/Flask_start/template1/flask-app/app.py", line 110, in add_to_session', '    response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"', '                                                                     ', "AttributeError: type object 'datetime.datetime' has no attribute 'datetime'"]}
+2023-10-27 11:03:53,084 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:03:52.369037
+2023-10-27 11:04:52,357 INFO app MainThread : Data fetched and stored in session successfully at 2023-10-27 11:04:51.606386

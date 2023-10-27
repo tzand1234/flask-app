@@ -9,6 +9,7 @@ import json
 import logging
 import secrets
 import os
+import pickle
 
 # source ~/.venvs/flask/bin/activate
 
@@ -97,18 +98,33 @@ def add_to_session(api_data: dict, data : dict):
     if data:
         session['data'] = data  # Store the data in the session
 
-        # Open the file in append mode
-        with open(os.getenv("FILE_LOG"), "a") as json_file:
-            # Write data to JSON file
-            json.dump(data, json_file)
-            # Add a newline character to separate the dictionaries in the file
-            json_file.write("\n")
+        # Open the file in binary mode for appending binary data
+        with open(os.getenv("FILE_LOG"), 'ab+') as fp:
+            # Move the cursor to the end of the file
+            fp.seek(0, 2)
+            
+            # Use pickle.dump() to serialize and write the data as binary
+            pickle.dump(data, fp)
 
         response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
         app.logger.info(response)
 
     else:
         return None
+
+@app.route("/show", methods=["GET", "POST"])
+def show():
+    #To load from pickle file
+    data = []
+    with open(os.getenv("FILE_LOG"), 'rb') as fr:
+        try:
+            while True:
+                data.append(pickle.load(fr))
+        except EOFError:
+            pass
+
+    return render_template('blog/dashboard.html', api_data_list=data)
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -119,25 +135,78 @@ def index():
             add_to_session(api_data, data)  # Add data to session
             idorder = str(session.get('data', {}).get('picklist', {}).get('idorder'))
 
-            if idorder:
-                # Get API URL from environment variable
-                api_url = os.getenv("API_URL") + idorder
-                api_url = api_url.replace('"','')
+            # Get API URL from environment variable
+            api_url = os.getenv("API_URL") + idorder
+            api_url = api_url.replace('"','')
 
-                # Making a GET request with basic authentication
-                response = requests.get(api_url, auth=(os.getenv("API_KEY_PICKER"), ''))
-                api_data = response.json()
-                add_to_session(api_data, data)  # Update session data
- 
+            # Making a GET request with basic authentication
+            response = requests.get(api_url, auth=(os.getenv("API_KEY_PICKER"), ''))
+            api_data = response.json()
+            add_to_session(api_data, data)  # Update session data
+
+            data = {
+                "Customer": {
+                    "CollectionLocation": os.getenv("COLLECTION_LOCATION"),
+                    "ContactPerson": os.getenv("CONTACT_PERSON"),
+                    "CustomerCode": os.getenv("CUSTOMER_CODE"),
+                    "CustomerNumber": os.getenv("CUSTOMER_NUMBER"),
+                    "Email": os.getenv("EMAIL"),
+                    "Name": os.getenv("NAME")
+                },
+                "Message": {
+                    "MessageID": "1",
+                    "MessageTimeStamp": datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+                    "Printertype": "GraphicFile|PDF"
+                },
+                "Shipments": [
+                    {
+                        "Addresses": [
+                            {
+                                "AddressType": "02",
+                                "City": session.get('data', {}).get('invoicecity'),
+                                "CompanyName": session.get('data', {}).get('invoicename'),
+                                "Countrycode": session.get('data', {}).get('invoicecountry'),
+                                "Name": session.get('data', {}).get('picklist', {}).get('deliveryname'),
+                                "StreetHouseNrExt": session.get('data', {}).get('invoiceaddress'),
+                                "Zipcode": session.get('data', {}).get('invoicecity')
+                            },
+                            {
+                                "AddressType": "01",
+                                "City": session.get('data', {}).get('picklist', {}).get('deliverycity'),
+                                "CompanyName": session.get('data', {}).get('picklist', {}).get('deliveryname'),
+                                "Countrycode": session.get('data', {}).get('picklist', {}).get('deliverycountry'),
+                                "Name": session.get('data', {}).get('picklist', {}).get('deliveryname'),
+                                "StreetHouseNrExt": session.get('data', {}).get('picklist', {}).get('deliveryaddress'),
+                                "Zipcode": session.get('data', {}).get('picklist', {}).get('deliveryzipcode')
+                            }
+                        ],
+                        "Contacts": [
+                            {
+                                "ContactType": "01",
+                                "Email": session.get('data', {}).get('picklist', {}).get('emailaddress'),
+                                "TelNr": session.get('data', {}).get('picklist', {}).get('telephone')
+                            }
+                        ],
+                        "Dimension": {
+                            "Weight": session.get('data', {}).get('weight')
+                        },
+                        "ProductCodeDelivery": "3189"
+                    }
+                ]
+            }
+
+
+            
+
             result = session.get('data', {})
-            return result
-            # return render_template('blog/dashboard.html', api_data_list=result)
+            return data
 
         except Exception as e:
             return internal_server_error(e)  # Handle exceptions
 
     else:
         return render_template('blog/dashboard.html')
+
 
 if __name__ == '__main__':
     # Run the Flask application
