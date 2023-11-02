@@ -1,6 +1,7 @@
 from flask import Flask, render_template, flash, session, request, jsonify
 import datetime
 from flask_mail import Mail, Message
+from functools import wraps
 import requests
 import traceback
 import json
@@ -54,6 +55,22 @@ def internal_server_error(e):
     flash('An error occurred')
     
     return render_template('auth/error.html', error_message=response)
+
+
+# Basic authentication function
+def check_auth(username, password):
+    # Compare username and password with values from environment variables
+    return username == os.getenv("BASIC_AUTH_USERNAME") and password == os.getenv("BASIC_AUTH_PASSWORD")
+
+# Authentication decorator
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return jsonify({"message": "Authentication required"}), 401
+        return f(*args, **kwargs)
+    return decorated
 
 def send_email(response):
     # Establish the SMTP connection
@@ -116,32 +133,27 @@ def add_to_session(api_data: dict, data: dict):
         response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
         app.logger.info(response)
 
-# @app.route("/show", methods=["GET", "POST"])
-# def show():
-#     # To load from pickle file
-#     data = []
+@app.route("/show", methods=["GET", "POST"])
+@requires_auth
+def show():
+    # To load from pickle file
+    data = []
 
-#     file_path = os.getenv("FILE_LOG")
-#     if file_path is None:
-#         raise ValueError("Error: Environment variable FILE_LOG is not set.")
+    file_path = os.getenv("FILE_LOG")
+    if file_path is None:
+        raise ValueError("Error: Environment variable FILE_LOG is not set.")
 
-#     with open(file_path, encoding='utf-8') as file:
-#         try:
-#             data = json.load(file)
-#         except EOFError:
-#             pass
+    with open(file_path, encoding='utf-8') as file:
+        try:
+            data = json.load(file)
+        except EOFError:
+            pass
 
-#     return render_template('blog/dashboard.html', data=data)
+    return render_template('blog/dashboard.html', data=data)
 
 @app.route("/", methods=["GET", "POST"])
+@requires_auth
 def index():
-
-    username = request.json.get('username')
-    password = request.json.get('password')
-
-    if username != os.getenv("API_USERNAME") or password != os.getenv("API_PASSWORD"):
-        return jsonify({"error": "Username and Password are required"}), 401  # Return JSON response with 401 Unauthorized status code
-
     data = {}
     api_data = request.get_json()  # Get JSON data from the POST request
     add_to_session(api_data, data)  # Add data to session
