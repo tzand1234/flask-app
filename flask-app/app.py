@@ -60,7 +60,7 @@ def internal_server_error(e):
 # Basic authentication function
 def check_auth(username, password):
     # Compare username and password with values from environment variables
-    return username == os.getenv("BASIC_AUTH_USERNAME") and password == os.getenv("BASIC_AUTH_PASSWORD")
+    return username == os.getenv("API_USERNAME") and password == os.getenv("API_PASSWORD")
 
 # Authentication decorator
 def requires_auth(f):
@@ -160,9 +160,9 @@ def index():
     idorder = str(session.get('data', {}).get('picklist', {}).get('idorder'))
 
     # Get API URL from environment variable
-    api_url = os.getenv("API_URL")
+    api_url = os.getenv("PICKER_API_URL")
     # Get the API key from the environment variable
-    api_key = os.getenv("API_KEY_PICKER")
+    api_key = os.getenv("PICKER_API_KEY")
 
     if not api_url or not api_key:
         raise ValueError("The API key, API URL could not be found in the environment or session data.")
@@ -232,21 +232,20 @@ def index():
     }
 
     # Get the API key from the environment variable
-    api_key = os.getenv("API_KEY_POSTNL")
+    api_key = os.getenv("POSTNL_API_KEY")
+    api_url = os.getenv("POSTNL_API_URL")
+
+    if not api_url or not api_key:
+        raise ValueError("The API key, API URL could not be found in the environment or session data.")
 
     # Prepare the headers with the API key if available, or None if not available
     headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'apikey': api_key
     }
     
-    if api_key:
-        headers['apikey'] = api_key
-    else:
-        raise ValueError("The API key could not be found in the environment or session data.")
-
     # Make the API request with headers
-    
-    response = requests.post("https://api-sandbox.postnl.nl/shipment/v2_2/label", headers=headers, json=data)
+    response = requests.post(api_url, headers=headers, json=data)
     
     if not response.ok:
         return response.json()
