@@ -1,12 +1,11 @@
-{% block head %}
-<link rel="stylesheet" href="../static/form.css" />
-{% endblock %} {% block body %}
+{% extends "base.html" %}
+{% block body %}
 <ul>
-  {% for row in api_data_list %}
+  {% for row in data %}
   <li>
     <ul>
-      {% for column in row %}
-      <li><p>{{ column }}</p></li>
+      {% for key, value in row.items() %}
+      <li><p>{{ key }} : {{ value }}</p></li>
       {% endfor %}
     </ul>
   </li>

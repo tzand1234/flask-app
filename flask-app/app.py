@@ -1,15 +1,12 @@
-from flask import *
-import postgresqlite
-import sqlalchemy as sa
+from flask import Flask, render_template, flash, session, request, jsonify
 import datetime
-from flask_mail import *
+from flask_mail import Mail, Message
 import requests
-import traceback 
+import traceback
 import json
 import logging
 import secrets
 import os
-import pickle
 
 # source ~/.venvs/flask/bin/activate
 
@@ -25,7 +22,7 @@ app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
 
 mail = Mail(app)
 
-logging.basicConfig(filename= os.getenv("DIRECTORY_LOG"), level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
+logging.basicConfig(filename=os.getenv("DIRECTORY_LOG"), level=logging.DEBUG, format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
 # Configure Flask app settings
 app.config['SECRET_KEY'] = secrets.token_hex(16)
@@ -58,28 +55,19 @@ def internal_server_error(e):
     
     return render_template('auth/error.html', error_message=response)
 
-
 def send_email(response):
-    try:
-        # Establish the SMTP connection
-        with app.app_context():
-            mail.connect()
+    # Establish the SMTP connection
+    with app.app_context():
+        mail.connect()
 
-            # Create the email message
-            msg = Message('There has been an error', sender=os.getenv("MAIL_USERNAME"), recipients=[os.getenv("MAIL_USERNAME")])
-            msg.body = f"{response}"
+        # Create the email message
+        msg = Message('There has been an error', sender=os.getenv("MAIL_USERNAME"), recipients=[os.getenv("MAIL_USERNAME")])
+        msg.body = f"{response}"
 
-            # Send the email
-            mail.send(msg)
+        # Send the email
+        mail.send(msg)
 
-            # Disconnect after sending the email
-            mail.disconnect()
-
-        return 'Email sent!'
-    except Exception as e:
-        return f'Error: {str(e)}'
-
-def add_to_session(api_data: dict, data : dict):
+def add_to_session(api_data: dict, data: dict):
     """
     Description:
         Adds info from the API response to the session and stores it in a JSON file.
@@ -97,128 +85,180 @@ def add_to_session(api_data: dict, data : dict):
 
     if data:
         session['data'] = data  # Store the data in the session
+        
+        file_path = os.getenv("FILE_LOG")
+        if file_path is None:
+            raise ValueError("Error: Environment variable FILE_LOG is not set.")
 
-        # Open the file in binary mode for appending binary data
-        with open(os.getenv("FILE_LOG"), 'ab+') as fp:
-            # Move the cursor to the end of the file
-            fp.seek(0, 2)
-            
-            # Use pickle.dump() to serialize and write the data as binary
-            pickle.dump(data, fp)
+        existing_data = []
+
+        # Check if the file already exists
+        with open(file_path, encoding='utf-8') as file:
+            try:
+                existing_data = json.load(file)
+            except EOFError:
+                pass
+        
+        # Check if the data already exists in the JSON file
+        if data not in existing_data:
+            # Add new data to the existing data list
+            existing_data.append(data)
+
+            # Write the updated data to the file
+            with open(file_path, 'w', encoding='utf-8') as file:
+                # Serialize the updated data to JSON format and write it to the file
+                json.dump(existing_data, file, ensure_ascii=False, indent=4)
+
+            print("Data successfully appended to the file.")
+        else:
+            print("Data already exists in the file. Skipping.")
 
         response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
         app.logger.info(response)
 
-    else:
-        return None
-
 @app.route("/show", methods=["GET", "POST"])
 def show():
-    #To load from pickle file
+    # To load from pickle file
     data = []
-    with open(os.getenv("FILE_LOG"), 'rb') as fr:
+
+    file_path = os.getenv("FILE_LOG")
+    if file_path is None:
+        raise ValueError("Error: Environment variable FILE_LOG is not set.")
+
+    with open(file_path, encoding='utf-8') as file:
         try:
-            while True:
-                data.append(pickle.load(fr))
+            data = json.load(file)
         except EOFError:
             pass
 
-    return render_template('blog/dashboard.html', api_data_list=data)
-
+    return render_template('blog/dashboard.html', data=data)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    if request.method == "POST":
-        try:
-            data = {}
-            api_data = request.get_json()  # Get JSON data from the POST request
-            add_to_session(api_data, data)  # Add data to session
-            idorder = str(session.get('data', {}).get('picklist', {}).get('idorder'))
 
-            # Get API URL from environment variable
-            api_url = os.getenv("API_URL") + idorder
-            api_url = api_url.replace('"','')
+    username = request.json.get('username')
+    password = request.json.get('password')
 
-            # Making a GET request with basic authentication
-            response = requests.get(api_url, auth=(os.getenv("API_KEY_PICKER"), ''))
-            api_data = response.json()
-            add_to_session(api_data, data)  # Update session data
+    if username != os.getenv("API_USERNAME") or password != os.getenv("API_PASSWORD"):
+        return jsonify({"error": "Username and Password are required"}), 401  # Return JSON response with 401 Unauthorized status code
 
-            test = session.get('data', {}).get('invoicecountry')
+    data = {}
+    api_data = request.get_json()  # Get JSON data from the POST request
+    add_to_session(api_data, data)  # Add data to session
+    idorder = str(session.get('data', {}).get('picklist', {}).get('idorder'))
 
-            data = {
-                "Customer": {
-                    "CollectionLocation": os.getenv("COLLECTION_LOCATION"),
-                    "ContactPerson": os.getenv("CONTACT_PERSON"),
-                    "CustomerCode": os.getenv("CUSTOMER_CODE"),
-                    "CustomerNumber": os.getenv("CUSTOMER_NUMBER"),
-                    "Email": os.getenv("EMAIL"),
-                    "Name": os.getenv("NAME")
-                },
-                "Message": {
-                    "MessageID": "1",
-                    "MessageTimeStamp": datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
-                    "Printertype": "GraphicFile|PDF"
-                },
-                "Shipments": [
+    # Get API URL from environment variable
+    api_url = os.getenv("API_URL")
+    # Get the API key from the environment variable
+    api_key = os.getenv("API_KEY_PICKER")
+
+    if not api_url or not api_key:
+        raise ValueError("The API key, API URL could not be found in the environment or session data.")
+
+    api_url = api_url + idorder
+    
+    api_url = api_url.replace('"', '')
+
+    # Making a GET request with basic authentication
+    response = requests.get(api_url, auth=(api_key, ''))
+
+    if not response.ok:
+        return response.json()
+
+    api_data = response.json()
+    add_to_session(api_data, data)  # Update session data
+
+    data = {
+        "Customer": {
+            "CollectionLocation": os.getenv("COLLECTION_LOCATION"),
+            "ContactPerson": os.getenv("CONTACT_PERSON"),
+            "CustomerCode": os.getenv("CUSTMER_CODE"),
+            "CustomerNumber": os.getenv("CUSTOMER_NUMBER"),
+            "Email": os.getenv("EMAIL"),
+            "Name": os.getenv("NAME")
+        },
+        "Message": {
+            "MessageID": "1",
+            "MessageTimeStamp": datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+            "Printertype": "GraphicFile|PDF"
+        },
+        "Shipments": [
+            {
+                "Addresses": [
                     {
-                        "Addresses": [
-                            {
-                                "AddressType": "02",
-                                "City": session.get('data', {}).get('invoicecity'),
-                                "CompanyName": session.get('data', {}).get('invoicename'),
-                                "Countrycode": session.get('data', {}).get('invoicecountry'),
-                                "Name": session.get('data', {}).get('picklist', {}).get('invoicecontact'),
-                                "StreetHouseNrExt": session.get('data', {}).get('invoiceaddress'),
-                                "Zipcode": session.get('data', {}).get('invoicezipcode')
-                            },
-                            {
-                                "AddressType": "01",
-                                "City": session.get('data', {}).get('picklist', {}).get('deliverycity'),
-                                "CompanyName": session.get('data', {}).get('picklist', {}).get('deliveryname'),
-                                "Countrycode": session.get('data', {}).get('picklist', {}).get('deliverycountry'),
-                                "Name": session.get('data', {}).get('picklist', {}).get('deliverycontact'),
-                                "StreetHouseNrExt": session.get('data', {}).get('picklist', {}).get('deliveryaddress'),
-                                "Zipcode": session.get('data', {}).get('picklist', {}).get('deliveryzipcode')
-                            }
-                        ],
-                        "Contacts": [
-                            {
-                                "ContactType": "01",
-                                "Email": session.get('data', {}).get('picklist', {}).get('emailaddress'),
-                                "TelNr": session.get('data', {}).get('picklist', {}).get('telephone')
-                            }
-                        ],
-                        "Dimension": {
-                            "Weight": session.get('data', {}).get('weight')
-                        },
-                        "ProductCodeDelivery": "3085"
+                        "AddressType": "02",
+                        "City": session.get('data', {}).get('invoicecity'),
+                        "CompanyName": session.get('data', {}).get('invoicename'),
+                        "Countrycode": session.get('data', {}).get('invoicecountry'),
+                        "Name": session.get('data', {}).get('picklist', {}).get('deliveryname'),
+                        "StreetHouseNrExt": session.get('data', {}).get('invoiceaddress'),
+                        "Zipcode": session.get('data', {}).get('invoicecity')
+                    },
+                    {
+                        "AddressType": "01",
+                        "City": session.get('data', {}).get('picklist', {}).get('deliverycity'),
+                        "CompanyName": session.get('data', {}).get('picklist', {}).get('deliveryname'),
+                        "Countrycode": session.get('data', {}).get('picklist', {}).get('deliverycountry'),
+                        "Name": session.get('data', {}).get('picklist', {}).get('deliveryname'),
+                        "StreetHouseNrExt": session.get('data', {}).get('picklist', {}).get('deliveryaddress'),
+                        "Zipcode": session.get('data', {}).get('picklist', {}).get('deliveryzipcode')
                     }
-                ]
+                ],
+                "Contacts": [
+                    {
+                        "ContactType": "01",
+                        "Email": session.get('data', {}).get('picklist', {}).get('emailaddress'),
+                        "TelNr": session.get('data', {}).get('picklist', {}).get('telephone')
+                    }
+                ],
+                "Dimension": {
+                    "Weight": session.get('data', {}).get('weight')
+                },
+                "ProductCodeDelivery": "3189"
             }
+        ]
+    }
 
-            # Authentication credentials (replace 'YOUR_API_KEY' with your actual API key)
-            api_key = 'MeXi0GWVeHDiWB4wWW0EoehDAPnfBOtB'
+    # Get the API key from the environment variable
+    api_key = os.getenv("API_KEY_POSTNL")
 
-            # Prepare the headers with the API key
-            headers = {
-                'apikey': api_key,
-                'Content-Type': 'application/json'
-            }
-
-            # Make the API request with headers
-            response = requests.post("https://api-sandbox.postnl.nl/shipment/v2_2/label", headers=headers, json=data)
-
-            api_data = response.json()
-
-            return api_data
-
-
-        except Exception as e:
-            return internal_server_error(e)  # Handle exceptions
-
+    # Prepare the headers with the API key if available, or None if not available
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    
+    if api_key:
+        headers['apikey'] = api_key
     else:
-        return render_template('blog/dashboard.html')
+        raise ValueError("The API key could not be found in the environment or session data.")
+
+    # Make the API request with headers
+    
+    response = requests.post("https://api-sandbox.postnl.nl/shipment/v2_2/label", headers=headers, json=data)
+    
+    if not response.ok:
+        return response.json()
+
+    api_data = response.json()
+
+    barcode = api_data['ResponseShipments'][0].get('Barcode')
+    labels = api_data['ResponseShipments'][0].get('Labels', [])
+    content = labels[0].get('Content') if labels else None
+
+    delivery_info = session.get('data', {}).get('picklist', {})
+    deliveryzipcode = delivery_info.get('deliveryzipcode')
+    country_code = delivery_info.get('deliverycountry')
+
+    if not all([barcode, content, deliveryzipcode, country_code]):
+        raise ValueError(f"Missing required data in the API response or session {barcode}, {content}, {deliveryzipcode}, {country_code}.")
+
+    return {
+    "identifier": barcode,
+    "trackingurl": f"https://jouw.postnl.nl/track-and-trace/{barcode}-{country_code}-{deliveryzipcode}",
+    "carrier_key": "postnl",
+    "label_contents_pdf": content
+    }
+
 
 
 if __name__ == '__main__':
