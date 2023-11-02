@@ -28,7 +28,25 @@ logging.basicConfig(filename=os.getenv("DIRECTORY_LOG"), level=logging.DEBUG, fo
 # Configure Flask app settings
 app.config['SECRET_KEY'] = secrets.token_hex(16)
 
+
+# Basic authentication function
+def check_auth(username, password):
+    # Compare username and password with values from environment variables
+    return username == os.getenv("API_USERNAME") and password == os.getenv("API_PASSWORD")
+
+# Authentication decorator
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kws):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return jsonify({"message": "Authentication required"}), 401
+        return f(*args, **kws) # Call the original function with arguments and keyword arguments
+    return decorated
+
+
 @app.errorhandler(Exception)
+@requires_auth
 def internal_server_error(e):
     """
     Description:
@@ -54,23 +72,7 @@ def internal_server_error(e):
     app.logger.error(response)  # Log the error to record.log
     flash('An error occurred')
     
-    return render_template('auth/error.html', error_message=response)
-
-
-# Basic authentication function
-def check_auth(username, password):
-    # Compare username and password with values from environment variables
-    return username == os.getenv("API_USERNAME") and password == os.getenv("API_PASSWORD")
-
-# Authentication decorator
-def requires_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
-            return jsonify({"message": "Authentication required"}), 401
-        return f(*args, **kwargs)
-    return decorated
+    return jsonify(response)
 
 def send_email(response):
     # Establish the SMTP connection
@@ -146,10 +148,10 @@ def show():
     with open(file_path, encoding='utf-8') as file:
         try:
             data = json.load(file)
-        except EOFError:
-            pass
+        except ValueError:
+            return jsonify("Error: There is no data available."), 401
 
-    return render_template('blog/dashboard.html', data=data)
+    return jsonify(data)
 
 @app.route("/", methods=["GET", "POST"])
 @requires_auth
