@@ -116,22 +116,22 @@ def add_to_session(api_data: dict, data: dict):
         response = f"Data fetched and stored in session successfully at {datetime.datetime.now()}"
         app.logger.info(response)
 
-@app.route("/show", methods=["GET", "POST"])
-def show():
-    # To load from pickle file
-    data = []
+# @app.route("/show", methods=["GET", "POST"])
+# def show():
+#     # To load from pickle file
+#     data = []
 
-    file_path = os.getenv("FILE_LOG")
-    if file_path is None:
-        raise ValueError("Error: Environment variable FILE_LOG is not set.")
+#     file_path = os.getenv("FILE_LOG")
+#     if file_path is None:
+#         raise ValueError("Error: Environment variable FILE_LOG is not set.")
 
-    with open(file_path, encoding='utf-8') as file:
-        try:
-            data = json.load(file)
-        except EOFError:
-            pass
+#     with open(file_path, encoding='utf-8') as file:
+#         try:
+#             data = json.load(file)
+#         except EOFError:
+#             pass
 
-    return render_template('blog/dashboard.html', data=data)
+#     return render_template('blog/dashboard.html', data=data)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
