@@ -3,7 +3,9 @@ import datetime
 from flask_mail import Mail, Message
 from functools import wraps
 import requests
+from io import BytesIO
 import traceback
+import pandas as pd
 import json
 import logging
 import secrets
@@ -291,6 +293,36 @@ def index():
     "label_contents_pdf": content
     }
 
+
+
+@app.route("/api/v1/csv/to/xlsx", methods=["GET", "POST"])
+@requires_auth
+def conversion():
+    try:
+        csv_data = request.get_json()["csv"]
+
+        # Convert CSV to XLSX using pandas
+        df = pd.read_csv(BytesIO(csv_data.encode()), delimiter=";")
+        excel_bytes = BytesIO()
+        df.to_excel(excel_bytes, index=False, engine='openpyxl')
+        excel_bytes.seek(0)
+
+        # Encode XLSX to base64
+        xlsx_base64 = base64.b64encode(excel_bytes.read()).decode("utf-8")
+
+        # Prepare the response as JSON
+        response_data = {
+            "xlsx": xlsx_base64
+        }
+
+        return jsonify(response_data)
+
+    except FileNotFoundError as e:
+        # Handle exceptions appropriately (e.g., log the error, return error response)
+        error_response = {
+            "error": e
+        }
+        return jsonify(error_response), 500
 
 
 if __name__ == '__main__':
