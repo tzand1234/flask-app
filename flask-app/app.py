@@ -111,12 +111,15 @@ def add_to_session(api_data: dict, data: dict):
 
         existing_data = []
 
-        # Check if the file already exists
-        with open(file_path, encoding='utf-8') as file:
-            try:
-                existing_data = json.load(file)
-            except EOFError:
-                pass
+        # Check if the file exists
+        if os.path.exists(file_path):
+            with open(file_path, encoding='utf-8') as file:
+                try:
+                    existing_data = json.load(file)
+                except json.JSONDecodeError:
+                    pass # Handle invalid JSON content
+        else:
+            pass  # File doesn't exist, initialize with empty data or defaults
         
         # Check if the data already exists in the JSON file
         if data not in existing_data:
@@ -186,7 +189,7 @@ def index():
         "Customer": {
             "CollectionLocation": os.getenv("COLLECTION_LOCATION"),
             "ContactPerson": os.getenv("CONTACT_PERSON"),
-            "CustomerCode": os.getenv("CUSTMER_CODE"),
+            "CustomerCode": os.getenv("CUSTOMER_CODE"),
             "CustomerNumber": os.getenv("CUSTOMER_NUMBER"),
             "Email": os.getenv("EMAIL"),
             "Name": os.getenv("NAME")
