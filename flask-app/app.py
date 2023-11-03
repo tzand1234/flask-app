@@ -243,7 +243,8 @@ def index():
                 "Dimension": {
                     "Weight": session.get('data', {}).get('weight')
                 },
-                "ProductCodeDelivery": "3085"
+                "ProductCodeDelivery": "3085",
+                "Reference": session.get('data', {}).get('picklist', {}).get('picklistid')
             }
         ]
     }
