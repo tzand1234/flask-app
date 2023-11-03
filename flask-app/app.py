@@ -40,7 +40,10 @@ def requires_auth(f):
     def decorated(*args, **kws):
         auth = request.authorization
         if not auth or not check_auth(auth.username, auth.password):
-            return jsonify({"message": "Authentication required"}), 401
+            error_response = {
+                "error": "Authentication required"
+            }
+            return jsonify(error_response), 400
         return f(*args, **kws) # Call the original function with arguments and keyword arguments
     return decorated
 
