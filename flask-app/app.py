@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, session, request, jsonify
+from flask import Flask, flash, session, request, jsonify
 import datetime
 from flask_mail import Mail, Message
 from functools import wraps
@@ -71,8 +71,11 @@ def internal_server_error(e):
     
     app.logger.error(response)  # Log the error to record.log
     flash('An error occurred')
-    
-    return jsonify(response)
+
+    error_response = {
+        "error": response
+    }
+    return jsonify(error_response), 400
 
 def send_email(response):
     # Establish the SMTP connection
@@ -152,11 +155,14 @@ def show():
         try:
             data = json.load(file)
         except ValueError:
-            return jsonify("Error: There is no data available."), 401
+            error_response = {
+                "error": "Invalid JSON format in the file."
+            }
+            return jsonify(error_response), 400
 
     return jsonify(data)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/api/v1/shipments", methods=["GET", "POST"])
 @requires_auth
 def index():
     data = {}
@@ -180,7 +186,10 @@ def index():
     response = requests.get(api_url, auth=(api_key, ''))
 
     if not response.ok:
-        return response.json()
+        error_response = {
+            "error": response.json()
+        }
+        return jsonify(error_response), 400
 
     api_data = response.json()
     add_to_session(api_data, data)  # Update session data
@@ -207,16 +216,16 @@ def index():
                         "City": session.get('data', {}).get('invoicecity'),
                         "CompanyName": session.get('data', {}).get('invoicename'),
                         "Countrycode": session.get('data', {}).get('invoicecountry'),
-                        "Name": session.get('data', {}).get('picklist', {}).get('deliveryname'),
+                        "Name": '',
                         "StreetHouseNrExt": session.get('data', {}).get('invoiceaddress'),
-                        "Zipcode": session.get('data', {}).get('invoicecity')
+                        "Zipcode": session.get('data', {}).get('invoicezipcode')
                     },
                     {
                         "AddressType": "01",
                         "City": session.get('data', {}).get('picklist', {}).get('deliverycity'),
                         "CompanyName": session.get('data', {}).get('picklist', {}).get('deliveryname'),
                         "Countrycode": session.get('data', {}).get('picklist', {}).get('deliverycountry'),
-                        "Name": session.get('data', {}).get('picklist', {}).get('deliveryname'),
+                        "Name": session.get('data', {}).get('picklist', {}).get('deliverycontact'),
                         "StreetHouseNrExt": session.get('data', {}).get('picklist', {}).get('deliveryaddress'),
                         "Zipcode": session.get('data', {}).get('picklist', {}).get('deliveryzipcode')
                     }
@@ -253,8 +262,11 @@ def index():
     response = requests.post(api_url, headers=headers, json=data)
     
     if not response.ok:
-        return response.json()
-
+        error_response = {
+            "error": response.json()
+        }
+        return jsonify(error_response), 400
+    
     api_data = response.json()
 
     barcode = api_data['ResponseShipments'][0].get('Barcode')
