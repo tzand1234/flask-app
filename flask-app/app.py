@@ -332,20 +332,17 @@ def conversion():
         # Convert CSV to XLSX using pandas with the C engine for faster processing
         df = pd.read_csv(BytesIO(csv_data), delimiter=delimiter, engine="c")
 
-        # Write XLSX data to BytesIO buffer using openpyxl engine
+        # Write XLSX data to BytesIO buffer using xlsxwriter engine
         excel_bytes = BytesIO()
         df.to_excel(excel_bytes, index=False, engine="xlsxwriter")
 
         # Ensure the cursor is at the beginning of the BytesIO buffer
         excel_bytes.seek(0)
 
-        # Encode XLSX to base64
-        xlsx_base64 = base64.b64encode(excel_bytes.getvalue()).decode()
-
         # Return the XLSX file as an attachment
         return send_file(
-            BytesIO(base64.b64decode(xlsx_base64)),
-            download_name="result.xlsx",
+            excel_bytes,
+            download_name="ALMEC_Pricelist.xlsx",
             as_attachment=True,
         )
 
