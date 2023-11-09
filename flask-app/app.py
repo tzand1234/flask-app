@@ -10,7 +10,6 @@ import json
 import logging
 import secrets
 import os
-import base64
 
 # source ~/.venvs/flask/bin/activate
 
