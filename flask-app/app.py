@@ -327,25 +327,22 @@ def conversion():
         # Get the CSV data from the POST request
         csv_data = request.get_json()["csv"]
 
-        # Decode the base64 encoded CSV file
+        # Create a BytesIO buffer to store XLSX file in memory
+        xlsx_buffer = io.BytesIO()
 
-        # Read the CSV string into a pandas DataFrame
-        df = pd.read_csv(io.StringIO(csv_data), delimiter=";", engine="c")
+        # Convert CSV to XLSX and save it in the BytesIO buffer
+        df = pd.read_csv(io.StringIO(csv_data), delimiter=";")
+        df.to_excel(xlsx_buffer, sheet_name="Sheet1", index=False, engine="xlsxwriter")
 
-        # Create a unique filename for the XLSX file
-        output_file_path = os.path.join("/workspace/Logs", "ALMEC_Pricelist.xlsx")
-
-        # Create a new Excel workbook with XlsxWriter engine
-        with pd.ExcelWriter(output_file_path, engine='xlsxwriter') as writer:
-            # Write the pandas DataFrame to the Excel workbook
-            df.to_excel(writer, sheet_name="Sheet1", index=False)
+        # Seek to the beginning of the BytesIO buffer
+        xlsx_buffer.seek(0)
 
         # Return the XLSX file as an attachment
         return send_file(
-            output_file_path,
+            xlsx_buffer,
             download_name="ALMEC_Pricelist.xlsx",
             as_attachment=True,
-            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
 
     except FileNotFoundError as e:
