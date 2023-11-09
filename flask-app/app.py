@@ -3,7 +3,7 @@ import datetime
 from flask_mail import Mail, Message
 from functools import wraps
 import requests
-from io import BytesIO
+import io
 import traceback
 import pandas as pd
 import json
@@ -325,25 +325,28 @@ def index():
 @requires_auth
 def conversion():
     try:
-        # Get CSV data from the request JSON and set the delimiter
-        csv_data = request.get_json()["csv"].encode()
-        delimiter = ";"
+        # Get the CSV data from the POST request
+        csv_data = request.get_json()["csv"]
 
-        # Convert CSV to XLSX using pandas with the C engine for faster processing
-        df = pd.read_csv(BytesIO(csv_data), delimiter=delimiter, engine="c")
+        # Decode the base64 encoded CSV file
 
-        # Write XLSX data to BytesIO buffer using xlsxwriter engine
-        excel_bytes = BytesIO()
-        df.to_excel(excel_bytes, index=False, engine="xlsxwriter")
+        # Read the CSV string into a pandas DataFrame
+        df = pd.read_csv(io.StringIO(csv_data), delimiter=";", engine="c")
 
-        # Ensure the cursor is at the beginning of the BytesIO buffer
-        excel_bytes.seek(0)
+        # Create a unique filename for the XLSX file
+        output_file_path = os.path.join("/workspace/Logs", "ALMEC_Pricelist.xlsx")
+
+        # Create a new Excel workbook with XlsxWriter engine
+        with pd.ExcelWriter(output_file_path, engine='xlsxwriter') as writer:
+            # Write the pandas DataFrame to the Excel workbook
+            df.to_excel(writer, sheet_name="Sheet1", index=False)
 
         # Return the XLSX file as an attachment
         return send_file(
-            excel_bytes,
+            output_file_path,
             download_name="ALMEC_Pricelist.xlsx",
             as_attachment=True,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
     except FileNotFoundError as e:
