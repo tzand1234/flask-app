@@ -1,4 +1,4 @@
-from flask import Flask, flash, session, request, jsonify
+from flask import Flask, flash, session, request, jsonify, send_file
 import datetime
 from flask_mail import Mail, Message
 from functools import wraps
@@ -321,7 +321,7 @@ def index():
     }
 
 
-@app.route("/api/v1/csv/to/xlsx", methods=["GET", "POST"])
+@app.route("/api/v1/csv/to/xlsx", methods=["POST"])
 @requires_auth
 def conversion():
     try:
@@ -342,11 +342,12 @@ def conversion():
         # Encode XLSX to base64
         xlsx_base64 = base64.b64encode(excel_bytes.getvalue()).decode()
 
-        # Prepare the response as JSON
-        response_data = {"xlsx": xlsx_base64}
-
-        # Return the JSON response
-        return jsonify(response_data)
+        # Return the XLSX file as an attachment
+        return send_file(
+            BytesIO(base64.b64decode(xlsx_base64)),
+            download_name="result.xlsx",
+            as_attachment=True,
+        )
 
     except FileNotFoundError as e:
         # Handle exceptions appropriately (e.g., log the error, return error response)
