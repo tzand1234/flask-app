@@ -270,7 +270,7 @@ def index():
                     }
                 ],
                 "Dimension": {"Weight": session.get("data", {}).get("weight")},
-                "ProductCodeDelivery": "3085" if session.get("data", {}).get("picklist", {}).get("deliverycountry") == 'NL' else "4963",
+                "ProductCodeDelivery": "3085" if session.get("data", {}).get("picklist", {}).get("deliverycountry") == 'NL' else "4912",
                 "Reference": session.get("data", {})
                 .get("picklist", {})
                 .get("picklistid"),
