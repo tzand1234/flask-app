@@ -175,7 +175,7 @@ def show():
 
     return jsonify(data)
 
-
+# Dropshipment method
 @app.route("/api/v1/shipments", methods=["GET", "POST"])
 @requires_auth
 def index():
@@ -207,6 +207,21 @@ def index():
 
     api_data = response.json()
     add_to_session(api_data, data)  # Update session data
+
+    # Added 12-12-2024
+    # Add custom emailaddress if it has been filled
+    emailaddress_customer = ""
+
+    for fields in api_data['orderfields']:
+        if fields['idorderfield'] == 3574 :
+            emailaddress_customer = fields['value']
+
+    if not emailaddress_customer:
+        emailaddress_customer = session.get("data", {}).get("picklist", {}).get("emailaddress")
+        emailaddress_customer = emailaddress_customer.strip()
+    else:
+        emailaddress_customer = emailaddress_customer.strip()
+    # ^^ # Added 12-12-2024
 
     data = {
         "Customer": {
@@ -261,9 +276,7 @@ def index():
                 "Contacts": [
                     {
                         "ContactType": "01",
-                        "Email": session.get("data", {})
-                        .get("picklist", {})
-                        .get("emailaddress"),
+                        "Email": emailaddress_customer,
                         "TelNr": session.get("data", {})
                         .get("picklist", {})
                         .get("telephone"),
