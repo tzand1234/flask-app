@@ -291,6 +291,8 @@ def index():
         ],
     }
 
+    print(data)
+
     # Get the API key from the environment variable
     api_key = os.getenv("POSTNL_API_KEY")
     api_url = os.getenv("POSTNL_API_URL")
