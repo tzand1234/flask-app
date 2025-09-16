@@ -178,7 +178,7 @@ def show():
 # Dropshipment method
 @app.route("/api/v1/shipments", methods=["GET", "POST"])
 @requires_auth
-def index():
+def shipment():
     data = {}
     api_data = request.get_json()  # Get JSON data from the POST request
     add_to_session(api_data, data)  # Add data to session
@@ -337,7 +337,7 @@ def index():
 # Dropshipment method Mailbox NL
 @app.route("/api/v1/shipments/postnl/mailbox", methods=["GET", "POST"])
 @requires_auth
-def index():
+def shipment_postnl_mailbox():
     data = {}
     api_data = request.get_json()  # Get JSON data from the POST request
     add_to_session(api_data, data)  # Add data to session
@@ -368,6 +368,7 @@ def index():
     add_to_session(api_data, data)  # Update session data
 
     # Added 12-12-2024
+    # Add custom emailaddress if it has been filled
     emailaddress_customer = ""
 
     for fields in api_data['orderfields']:
