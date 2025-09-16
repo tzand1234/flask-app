@@ -361,7 +361,13 @@ def shipment_postnl_mailbox():
     response = requests.get(api_url, auth=(api_key, ""))
 
     if not response.ok:
-        error_response = {"error": response.json()}
+        messages = response.json()
+        
+        # Zorg dat messages altijd een lijst is
+        if not isinstance(messages, list):
+            messages = [messages]
+
+        error_response = {"error_messages": messages}
         return jsonify(error_response), 400
 
     api_data = response.json()
