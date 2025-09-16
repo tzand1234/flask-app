@@ -473,15 +473,14 @@ def shipment_postnl_mailbox():
         error_response = {"error": response.json()}
         return jsonify(error_response), 400
 
-    api_data = response.json()
+    postnl_data = response.json()
 
-    barcode = api_data["ResponseShipments"][0].get("Barcode")
-    labels = api_data["ResponseShipments"][0].get("Labels", [])
+    barcode = postnl_data["ResponseShipments"][0].get("Barcode")
+    labels = postnl_data["ResponseShipments"][0].get("Labels", [])
     content = labels[0].get("Content") if labels else None
 
-    delivery_info = session.get("data", {}).get("picklist", {})
-    deliveryzipcode = delivery_info.get("deliveryzipcode")
-    country_code = delivery_info.get("deliverycountry")
+    deliveryzipcode = api_data["deliveryzipcode"]
+    country_code = api_data["deliverycountry"]
 
     if not all([barcode, content, deliveryzipcode, country_code]):
         raise ValueError(
