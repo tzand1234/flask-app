@@ -341,12 +341,23 @@ def shipment_postnl_mailbox():
     data = {}
     api_data = request.get_json()  # Get JSON data from the POST request
     add_to_session(api_data, data)  # Add data to session
-    idorder = str(session.get("data", {}).get("shipment", {}).get("references", {}).get("idorder"))
+    idorder = api_data["data"]["shipment"]["references"]["idorder"]
 
     # Get API URL from environment variable
     api_url = os.getenv("PICKER_API_URL")
     # Get the API key from the environment variable
     api_key = os.getenv("PICKER_API_KEY")
+
+    if idorder is None:
+        messages = [f"No idorder found in the request. Data: {api_data}"]
+
+         # Zorg dat messages altijd een lijst is
+        if not isinstance(messages, list):
+            messages = [messages]
+
+        error_response = {"error_messages": messages}
+        return jsonify(error_response), 400
+    
 
     if not api_url or not api_key:
         raise ValueError(
