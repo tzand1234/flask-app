@@ -480,6 +480,7 @@ def shipment_postnl_mailbox():
     content = labels[0].get("Content") if labels else None
 
     deliveryzipcode = api_data["deliveryzipcode"]
+    deliveryzipcode = deliveryzipcode.replace(" ", "")
     country_code = api_data["deliverycountry"]
 
     if not all([barcode, content, deliveryzipcode, country_code]):
@@ -488,10 +489,18 @@ def shipment_postnl_mailbox():
         )
 
     return {
-        "identifier": barcode,
-        "trackingurl": f"https://jouw.postnl.nl/track-and-trace/{barcode}-{country_code}-{deliveryzipcode}",
-        "carrier_key": "postnl",
-        "label_contents_pdf": content,
+        "version": "1.0",
+        "data":{
+            "carrier_name": "PostNL",
+            "tracking_code": barcode,
+            "tracking_url": f"https://jouw.postnl.nl/track-and-trace/{barcode}-{country_code}-{deliveryzipcode}",
+            "label":{
+                "format": "A6",
+                "documents": {
+                    "pdf": content
+                }
+            }
+        }
     }
 
 @app.route("/api/v1/csv/to/xlsx", methods=["POST"])
