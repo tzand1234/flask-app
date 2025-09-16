@@ -491,6 +491,7 @@ def shipment_postnl_mailbox():
     return {
         "version": "1.0",
         "data":{
+            "carrier_key": "postnl",
             "carrier_name": "PostNL",
             "tracking_code": barcode,
             "tracking_url": f"https://jouw.postnl.nl/track-and-trace/{barcode}-{country_code}-{deliveryzipcode}",
