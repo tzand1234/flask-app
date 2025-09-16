@@ -334,6 +334,163 @@ def index():
         "label_contents_pdf": content,
     }
 
+# Dropshipment method Mailbox NL
+@app.route("/api/v1/shipments/postnl/mailbox", methods=["GET", "POST"])
+@requires_auth
+def index():
+    data = {}
+    api_data = request.get_json()  # Get JSON data from the POST request
+    add_to_session(api_data, data)  # Add data to session
+    idorder = str(session.get("data", {}).get("picklist", {}).get("idorder"))
+
+    # Get API URL from environment variable
+    api_url = os.getenv("PICKER_API_URL")
+    # Get the API key from the environment variable
+    api_key = os.getenv("PICKER_API_KEY")
+
+    if not api_url or not api_key:
+        raise ValueError(
+            "The API key, API URL could not be found in the environment or session data."
+        )
+
+    api_url = api_url + idorder
+
+    api_url = api_url.replace('"', "")
+
+    # Making a GET request with basic authentication
+    response = requests.get(api_url, auth=(api_key, ""))
+
+    if not response.ok:
+        error_response = {"error": response.json()}
+        return jsonify(error_response), 400
+
+    api_data = response.json()
+    add_to_session(api_data, data)  # Update session data
+
+    # Added 12-12-2024
+    emailaddress_customer = ""
+
+    for fields in api_data['orderfields']:
+        if fields['idorderfield'] == 3574 :
+            emailaddress_customer = fields['value']
+
+    if not emailaddress_customer:
+        emailaddress_customer = session.get("data", {}).get("picklist", {}).get("emailaddress")
+        emailaddress_customer = emailaddress_customer.strip()
+    else:
+        emailaddress_customer = emailaddress_customer.strip()
+    # ^^ # Added 12-12-2024
+
+    data = {
+        "Customer": {
+            "CollectionLocation": os.getenv("COLLECTION_LOCATION"),
+            "ContactPerson": os.getenv("CONTACT_PERSON"),
+            "CustomerCode": os.getenv("CUSTOMER_CODE"),
+            "CustomerNumber": os.getenv("CUSTOMER_NUMBER"),
+            "Email": os.getenv("EMAIL"),
+            "Name": os.getenv("NAME"),
+        },
+        "Message": {
+            "MessageID": "1",
+            "MessageTimeStamp": datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+            "Printertype": "GraphicFile|PDF",
+        },
+        "Shipments": [
+            {
+                "Addresses": [
+                    {
+                        "AddressType": "02",
+                        "City": session.get("data", {}).get("invoicecity"),
+                        "CompanyName": session.get("data", {}).get("invoicename"),
+                        "Countrycode": session.get("data", {}).get("invoicecountry"),
+                        "Name": "",
+                        "StreetHouseNrExt": session.get("data", {}).get(
+                            "invoiceaddress"
+                        ),
+                        "Zipcode": session.get("data", {}).get("invoicezipcode"),
+                    },
+                    {
+                        "AddressType": "01",
+                        "City": session.get("data", {})
+                        .get("picklist", {})
+                        .get("deliverycity"),
+                        "CompanyName": session.get("data", {})
+                        .get("picklist", {})
+                        .get("deliveryname"),
+                        "Countrycode": session.get("data", {})
+                        .get("picklist", {})
+                        .get("deliverycountry"),
+                        "Name": session.get("data", {})
+                        .get("picklist", {})
+                        .get("deliverycontact"),
+                        "StreetHouseNrExt": session.get("data", {})
+                        .get("picklist", {})
+                        .get("deliveryaddress"),
+                        "Zipcode": session.get("data", {})
+                        .get("picklist", {})
+                        .get("deliveryzipcode"),
+                    },
+                ],
+                "Contacts": [
+                    {
+                        "ContactType": "01",
+                        "Email": emailaddress_customer,
+                        "TelNr": session.get("data", {})
+                        .get("picklist", {})
+                        .get("telephone"),
+                    }
+                ],
+                "Dimension": {"Weight": session.get("data", {}).get("weight")},
+                "ProductCodeDelivery": "2928" if session.get("data", {}).get("picklist", {}).get("deliverycountry") == 'NL' else "4912",
+                "Reference": session.get("data", {})
+                .get("picklist", {})
+                .get("picklistid"),
+            }
+        ],
+    }
+
+    print(data)
+
+    # Get the API key from the environment variable
+    api_key = os.getenv("POSTNL_API_KEY")
+    api_url = os.getenv("POSTNL_API_URL")
+
+    if not api_url or not api_key:
+        raise ValueError(
+            "The API key, API URL could not be found in the environment or session data."
+        )
+
+    # Prepare the headers with the API key if available, or None if not available
+    headers = {"Content-Type": "application/json", "apikey": api_key}
+
+    # Make the API request with headers
+    response = requests.post(api_url, headers=headers, json=data)
+
+    if not response.ok:
+        error_response = {"error": response.json()}
+        return jsonify(error_response), 400
+
+    api_data = response.json()
+
+    barcode = api_data["ResponseShipments"][0].get("Barcode")
+    labels = api_data["ResponseShipments"][0].get("Labels", [])
+    content = labels[0].get("Content") if labels else None
+
+    delivery_info = session.get("data", {}).get("picklist", {})
+    deliveryzipcode = delivery_info.get("deliveryzipcode")
+    country_code = delivery_info.get("deliverycountry")
+
+    if not all([barcode, content, deliveryzipcode, country_code]):
+        raise ValueError(
+            f"Missing required data in the API response or session {barcode}, {content}, {deliveryzipcode}, {country_code}."
+        )
+
+    return {
+        "identifier": barcode,
+        "trackingurl": f"https://jouw.postnl.nl/track-and-trace/{barcode}-{country_code}-{deliveryzipcode}",
+        "carrier_key": "postnl",
+        "label_contents_pdf": content,
+    }
 
 @app.route("/api/v1/csv/to/xlsx", methods=["POST"])
 @requires_auth
