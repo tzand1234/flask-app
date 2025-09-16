@@ -341,7 +341,7 @@ def shipment_postnl_mailbox():
     data = {}
     api_data = request.get_json()  # Get JSON data from the POST request
     add_to_session(api_data, data)  # Add data to session
-    idorder = api_data["data"]["shipment"]["references"]["idorder"]
+    idorder = str(api_data["data"]["shipment"]["references"]["idorder"])
 
     # Get API URL from environment variable
     api_url = os.getenv("PICKER_API_URL")
