@@ -357,6 +357,9 @@ def shipment_postnl_mailbox():
 
         error_response = {"error_messages": messages}
         return jsonify(error_response), 400
+    else:
+        weight = api_data["data"]["shipment"]["weight"]
+        picklistid = api_data["data"]["shipment"]["references"]["picklistid"]
     
 
     if not api_url or not api_key:
@@ -393,7 +396,7 @@ def shipment_postnl_mailbox():
             emailaddress_customer = fields['value']
 
     if not emailaddress_customer:
-        emailaddress_customer = session.get("data", {}).get("picklist", {}).get("emailaddress")
+        emailaddress_customer = api_data["emailaddress"]
         emailaddress_customer = emailaddress_customer.strip()
     else:
         emailaddress_customer = emailaddress_customer.strip()
@@ -418,51 +421,33 @@ def shipment_postnl_mailbox():
                 "Addresses": [
                     {
                         "AddressType": "02",
-                        "City": session.get("data", {}).get("invoicecity"),
-                        "CompanyName": session.get("data", {}).get("invoicename"),
-                        "Countrycode": session.get("data", {}).get("invoicecountry"),
+                        "City": api_data["invoicecity"],
+                        "CompanyName": api_data["invoicename"],
+                        "Countrycode": api_data["invoicecountry"],
                         "Name": "",
-                        "StreetHouseNrExt": session.get("data", {}).get(
-                            "invoiceaddress"
-                        ),
-                        "Zipcode": session.get("data", {}).get("invoicezipcode"),
+                        "StreetHouseNrExt": api_data["invoiceaddress"],
+                        "Zipcode": api_data["invoicezipcode"],
                     },
                     {
                         "AddressType": "01",
-                        "City": session.get("data", {})
-                        .get("picklist", {})
-                        .get("deliverycity"),
-                        "CompanyName": session.get("data", {})
-                        .get("picklist", {})
-                        .get("deliveryname"),
-                        "Countrycode": session.get("data", {})
-                        .get("picklist", {})
-                        .get("deliverycountry"),
-                        "Name": session.get("data", {})
-                        .get("picklist", {})
-                        .get("deliverycontact"),
-                        "StreetHouseNrExt": session.get("data", {})
-                        .get("picklist", {})
-                        .get("deliveryaddress"),
-                        "Zipcode": session.get("data", {})
-                        .get("picklist", {})
-                        .get("deliveryzipcode"),
+                        "City": api_data["deliverycity"],
+                        "CompanyName": api_data["deliveryname"],
+                        "Countrycode": api_data["deliverycountry"],
+                        "Name": api_data["deliverycontactname"],
+                        "StreetHouseNrExt": api_data["deliveryaddress"],
+                        "Zipcode": api_data["deliveryzipcode"],
                     },
                 ],
                 "Contacts": [
                     {
                         "ContactType": "01",
                         "Email": emailaddress_customer,
-                        "TelNr": session.get("data", {})
-                        .get("picklist", {})
-                        .get("telephone"),
+                        "TelNr": api_data["telephone"],
                     }
                 ],
-                "Dimension": {"Weight": session.get("data", {}).get("weight")},
-                "ProductCodeDelivery": "2928" if session.get("data", {}).get("picklist", {}).get("deliverycountry") == 'NL' else "4912",
-                "Reference": session.get("data", {})
-                .get("picklist", {})
-                .get("picklistid"),
+                "Dimension": {"Weight": weight},
+                "ProductCodeDelivery": "2928" if api_data["deliverycountry"] == 'NL' else "4912",
+                "Reference": picklistid,
             }
         ],
     }
