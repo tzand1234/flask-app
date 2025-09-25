@@ -223,6 +223,15 @@ def shipment():
         emailaddress_customer = emailaddress_customer.strip()
     # ^^ # Added 12-12-2024
 
+    # Added 25-09-2025
+    # Add custom reference if it has been filled
+    reference_customer = ""
+
+    for fields in api_data['orderfields']:
+        if fields['idorderfield'] == 1313 :
+            reference_customer = " | " + fields['value']
+    # ^^ # Added 25-09-2025
+
     data = {
         "Customer": {
             "CollectionLocation": os.getenv("COLLECTION_LOCATION"),
@@ -286,7 +295,7 @@ def shipment():
                 "ProductCodeDelivery": "3085" if session.get("data", {}).get("picklist", {}).get("deliverycountry") == 'NL' else "4912",
                 "Reference": session.get("data", {})
                 .get("picklist", {})
-                .get("picklistid"),
+                .get("picklistid") + reference_customer,
             }
         ],
     }
@@ -402,6 +411,15 @@ def shipment_postnl_mailbox():
         emailaddress_customer = emailaddress_customer.strip()
     # ^^ # Added 12-12-2024
 
+    # Added 25-09-2025
+    # Add custom reference if it has been filled
+    reference_customer = ""
+
+    for fields in api_data['orderfields']:
+        if fields['idorderfield'] == 1313 :
+            reference_customer = " | " + fields['value']
+    # ^^ # Added 25-09-2025
+
     data = {
         "Customer": {
             "CollectionLocation": os.getenv("COLLECTION_LOCATION"),
@@ -447,7 +465,7 @@ def shipment_postnl_mailbox():
                 ],
                 "Dimension": {"Weight": weight},
                 "ProductCodeDelivery": "2928" if api_data["deliverycountry"] == 'NL' else "4912",
-                "Reference": picklistid,
+                "Reference": picklistid + reference_customer,
             }
         ],
     }
