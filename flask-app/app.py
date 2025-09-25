@@ -234,7 +234,7 @@ def shipment():
     if not reference_customer:
         reference_customer = ""
     else:
-        reference_customer = reference_customer.strip()
+        reference_customer = reference_customer
     # ^^ # Added 25-09-2025
 
     data = {
@@ -427,7 +427,7 @@ def shipment_postnl_mailbox():
     if not reference_customer:
         reference_customer = ""
     else:
-        reference_customer = reference_customer.strip()
+        reference_customer = reference_customer
     # ^^ # Added 25-09-2025
 
     data = {
