@@ -230,6 +230,11 @@ def shipment():
     for fields in api_data['orderfields']:
         if fields['idorderfield'] == 1313 :
             reference_customer = " | " + fields['value']
+
+    if not reference_customer:
+        reference_customer = ""
+    else:
+        reference_customer = reference_customer.strip()
     # ^^ # Added 25-09-2025
 
     data = {
@@ -418,6 +423,11 @@ def shipment_postnl_mailbox():
     for fields in api_data['orderfields']:
         if fields['idorderfield'] == 1313 :
             reference_customer = " | " + fields['value']
+
+    if not reference_customer:
+        reference_customer = ""
+    else:
+        reference_customer = reference_customer.strip()
     # ^^ # Added 25-09-2025
 
     data = {
